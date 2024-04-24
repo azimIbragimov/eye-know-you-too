@@ -6,7 +6,6 @@ from typing import List, Optional, Sequence
 
 import numpy as np
 import pandas as pd
-import pytorch_lightning as pl
 
 from pytorch_metric_learning import samplers
 from scipy.signal import savgol_filter
