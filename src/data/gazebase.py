@@ -59,7 +59,7 @@ class GazeBase():
             self.base_dir
             / "processed"
             / (
-                f"gazebase_savgol_ds{int(self.total_downsample_factor)}_acc"
+                f"gazebase_savgol_ds{int(self.total_downsample_factor)}"
                 + f"_{'normal' if self.noise_sd is None else 'degraded'}.pkl"
             )
         )
