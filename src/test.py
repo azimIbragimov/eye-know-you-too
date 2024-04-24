@@ -149,7 +149,6 @@ if __name__ == "__main__":
         noise_sd=noise_sd,
     )
 
-
     dataset.prepare_data()
     dataset.setup(stage="test")
     print("Test set mean:", dataset.zscore_mn)
@@ -163,6 +162,8 @@ if __name__ == "__main__":
         w_class_loss=args.w_ce,
         compute_map_at_r=args.map_at_r,
     ).to(device)
+
+    model.load_state_dict(torch.load(checkpoint_path))
 
 
     test_loader, full_val_loader = dataset.test_dataloader()
