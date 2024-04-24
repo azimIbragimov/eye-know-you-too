@@ -155,7 +155,7 @@ skip_plot = not args.plot
 
 print("Using model:", model_name)
 
-fold_names = [model_name + f"_f{fold}.csv" for fold in range(1)]
+fold_names = [model_name + f"_f{fold}.csv" for fold in range(4)]
 #fold_names = [model_name + ".csv"]
 files_dict = {
     k: [embed_dir / "_".join([k, name]) for name in fold_names]
