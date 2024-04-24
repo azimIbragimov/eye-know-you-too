@@ -15,3 +15,16 @@ We utilize the GazeBase dataset, the same one used in the original implementatio
 | GazeBase - 125 HZ | https://www.dropbox.com/scl/fi/3axxu21idvhpvtajeiwai/gazebase_savgol_ds8_normal.pkl?rlkey=r8mwa7qf1exht911gba7obyfg&st=41u9ffey&dl=0 |
 | GazeBase - 50 HZ | https://www.dropbox.com/scl/fi/iy8iqxwtlqrqqs3x0y4ih/gazebase_savgol_ds20_normal.pkl?rlkey=cbm72r8hdbwulm0z9meqcgdcn&st=sl4eyd2i&dl=0 | 
 | GazeBase - 31.25 HZ | https://www.dropbox.com/scl/fi/hvz770g58g50cl7dzwnue/gazebase_savgol_ds32_normal.pkl?rlkey=3a0ggn3sb6jcwwaowxgivmljb&st=hhcm754e&dl=0 |
+
+Then make sure to place them within `data/processed/` directory. The directory tree must look like shown below: 
+
+```
+data/
+├── processed
+│   ├── gazebase_savgol_ds1_normal.pkl
+│   ├── gazebase_savgol_ds2_normal.pkl
+│   ├── gazebase_savgol_ds4_normal.pkl
+│   ├── gazebase_savgol_ds20_normal.pkl
+│   ├── gazebase_savgol_ds8_normal.pkl
+│   └── gazebase_savgol_ds32_normal.pkl
+```
