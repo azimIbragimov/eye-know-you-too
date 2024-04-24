@@ -3,9 +3,11 @@ import os
 from pathlib import Path
 import torch
 import tqdm
+import pandas as pd
 
 from data.gazebase import GazeBase
 from models.modules import EyeKnowYouToo
+
 
 parser = argparse.ArgumentParser()
 
@@ -53,14 +55,20 @@ parser.add_argument(
     help="Length of input sequences (prior to downsampling)",
 )
 parser.add_argument(
+    "--batch_samples",
+    default=16,
+    type=int,
+    help="Number of classes sampled per minibatch",
+)
+parser.add_argument(
     "--batch_classes",
     default=16,
     type=int,
     help="Number of classes sampled per minibatch",
 )
 parser.add_argument(
-    "--batch_samples",
-    default=16,
+    "--batch_size_for_testing",
+    default=256,
     type=int,
     help="Number of sequences sampled per class per minibatch",
 )
@@ -88,11 +96,8 @@ parser.add_argument(
     type=str,
     help="Path to directory to store embeddings",
 )
+
 args = parser.parse_args()
-
-
-
-
 
 if __name__ == "__main__": 
 
@@ -110,9 +115,7 @@ if __name__ == "__main__":
         + ("_degraded" if args.degrade_precision else "_normal")
         + f"_f{args.fold}"
     )
-    checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + ".ckpt")
-    print(checkpoint_path)
-
+    checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + "_epoch=99.ckpt")
 
     downsample_factors_dict = {
         1: [],
@@ -139,21 +142,18 @@ if __name__ == "__main__":
         base_dir=args.gazebase_dir,
         downsample_factors=downsample_factors,
         subsequence_length_before_downsampling=args.seq_len,
-        classes_per_batch=args.batch_classes,
-        samples_per_class=args.batch_samples,
+        classes_per_batch=16,
+        samples_per_class=16,
         compute_map_at_r=args.map_at_r,
         batch_size_for_testing=test_batch_size,
-        noise_sd=noise_sd
+        noise_sd=noise_sd,
     )
 
 
     dataset.prepare_data()
-    dataset.setup(stage="fit")
-    print("Train set mean:", dataset.zscore_mn)
-    print("Train set SD:", dataset.zscore_sd)
-
-    train_loader, validation_loader = dataset.train_dataloader(), dataset.val_dataloader()
-
+    dataset.setup(stage="test")
+    print("Test set mean:", dataset.zscore_mn)
+    print("Test set SD:", dataset.zscore_sd)
 
     model = EyeKnowYouToo(
         n_classes=dataset.n_classes,
@@ -165,64 +165,64 @@ if __name__ == "__main__":
     ).to(device)
 
 
-    opt = torch.optim.Adam(model.parameters())
-    sched = torch.optim.lr_scheduler.OneCycleLR(
-            optimizer=opt,
-            max_lr=0.01,
-            epochs=100,
-            steps_per_epoch=1,
-            cycle_momentum=False,
-            div_factor=100.0,
-            final_div_factor=1000.0,
-   )
+    test_loader, full_val_loader = dataset.test_dataloader()
 
-    # training
-    model.train()
-    print(validation_loader)
-    size = len(train_loader.dataset) + len(validation_loader[0].dataset)
 
-    for epoch in range(100):
-        with tqdm.tqdm(total=size, desc="") as pbar:
-            for batch, (inputs, metadata) in enumerate(train_loader):
-                inputs, metadata = inputs.to(device), metadata.to(device)
-                embeddings = model.embedder(inputs)
-    
-                labels = metadata[:, 0]
-                metric_loss = model.metric_step(embeddings, labels)
-                class_loss = model.class_step(embeddings, labels)
-                total_loss = metric_loss + class_loss
-    
-                # Backpropagation
-                total_loss.backward()
-                opt.step()
-                opt.zero_grad()
+    # testing 
+    model.eval()
+    with torch.no_grad():
+        embeddings = []
+        metadata = []
+        with tqdm.tqdm(total=len(test_loader.dataset), desc="") as pbar:
+            for batch, (x, y) in enumerate(test_loader):
+                x, y = x.to(device), y.to(device)
+                pred = model.embedder(x)
+                pred, x, y = pred.detach().cpu(), x.detach().cpu(), y.detach().cpu()
+                embeddings.append(pred)
+                metadata.append(y)
     
                 # Update progress bar
-                pbar.set_description(f"Epoch {epoch+1}, Loss: {total_loss.item():.6f},  ")
-                pbar.update(len(inputs))
-        
+                pbar.update(len(x))
 
-            # validation
-            valid_loss = []
-            model.eval()
-            with torch.no_grad():
-                for batch, (inputs, metadata) in enumerate(validation_loader[0]):
-                    inputs, metadata = inputs.to(device), metadata.to(device)
-                    embeddings = model.embedder(inputs)
-            
-                    labels = metadata[:, 0]
-                    metric_loss = model.metric_step(embeddings, labels)
-                    class_loss = model.class_step(embeddings, labels)
-                    total_loss = metric_loss + class_loss
+        embeddings = torch.cat(embeddings, dim=0).numpy()
+        metadata = torch.cat(metadata, dim=0).numpy()
 
-                    # Update progress bar
-                    valid_loss.append(total_loss)
-                    pbar.update(len(inputs))
+        print(embeddings)
+        print(metadata)
+        print(embeddings.shape, metadata.shape)
+
+        embed_dim = embeddings.shape[1]
+        embedding_dict = {
+            f"embed_dim_{i:03d}": embeddings[:, i]
+            for i in range(embed_dim)
+        }
+        full_dict = {
+            "nb_round": metadata[:, 1],
+            "nb_subject": metadata[:, 2],
+            "nb_session": metadata[:, 3],
+            "nb_task": metadata[:, 4],
+            "nb_subsequence": metadata[:, 5],
+            "exclude": metadata[:, 6],
+            **embedding_dict,
+        }
+        df = pd.DataFrame(full_dict)
+        df = df.sort_values(
+            by=[
+                "nb_round",
+                "nb_subject",
+                "nb_session",
+                "nb_task",
+                "nb_subsequence",
+            ],
+            axis=0,
+            ascending=True,
+        )
+        path = model.embeddings_path.with_name(
+            "test"  + "_" + model.embeddings_path.name
+        )
+        path.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(path, index=False)
+    
 
 
-                pbar.set_description(f"Epoch {epoch+1}, Validation Loss: {sum(valid_loss)/len(valid_loss):.6f},  ")
-        
 
-
-        sched.step()
-        torch.save(model.state_dict(), checkpoint_path.with_name(checkpoint_stem + f"_epoch={epoch}.ckpt"))
