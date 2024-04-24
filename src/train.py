@@ -130,10 +130,6 @@ if __name__ == "__main__":
         noise_sd = 0.5
 
 
-    test_batch_size = args.batch_size_for_testing
-    if test_batch_size == -1:
-        test_batch_size = None
-
     dataset = GazeBase(
         current_fold=args.fold,
         base_dir=args.gazebase_dir,
@@ -142,7 +138,7 @@ if __name__ == "__main__":
         classes_per_batch=args.batch_classes,
         samples_per_class=args.batch_samples,
         compute_map_at_r=args.map_at_r,
-        batch_size_for_testing=test_batch_size,
+        batch_size_for_testing=None,
         noise_sd=noise_sd
     )
 
