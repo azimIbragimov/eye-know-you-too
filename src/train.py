@@ -3,11 +3,8 @@ import os
 from pathlib import Path
 import torch
 
-from src.data.datamodules import GazeBaseDataModule, JuDo1000DataModule
-from src.models.modules import EyeKnowYouToo
-
 parser = argparse.ArgumentParser()
-from src.data.gazebase import GazeBase
+from data.gazebase import GazeBase
 
 parser.add_argument(
     "--resume_epoch",
