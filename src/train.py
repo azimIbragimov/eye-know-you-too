@@ -2,9 +2,11 @@ import argparse
 import os
 from pathlib import Path
 import torch
+import tqdm
 
 parser = argparse.ArgumentParser()
 from data.gazebase import GazeBase
+from models.modules import EyeKnowYouToo
 
 parser.add_argument(
     "--resume_epoch",
@@ -119,6 +121,7 @@ if __name__ == "__main__":
         + f"_f{args.fold}"
     )
     checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + ".ckpt")
+    print(checkpoint_path)
 
 
     downsample_factors_dict = {
@@ -160,6 +163,54 @@ if __name__ == "__main__":
     print("Train set SD:", dataset.zscore_sd)
 
     train_loader, validation_loader = dataset.train_dataloader(), dataset.test_dataloader()
+
+
+    model = EyeKnowYouToo(
+        n_classes=dataset.n_classes,
+        embeddings_filename=checkpoint_stem + ".csv",
+        embeddings_dir=args.embed_dir,
+        w_metric_loss=args.w_ms,
+        w_class_loss=args.w_ce,
+        compute_map_at_r=args.map_at_r,
+    ).to(device)
+
+
+    opt = torch.optim.Adam(model.parameters())
+    sched = torch.optim.lr_scheduler.OneCycleLR(
+            optimizer=opt,
+            max_lr=0.01,
+            epochs=100,
+            steps_per_epoch=1,
+            cycle_momentum=False,
+            div_factor=100.0,
+            final_div_factor=1000.0,
+   )
+
+    # training
+    model.train()
+    size = len(train_loader.dataset)
+    for epoch in range(100):
+        with tqdm.tqdm(total=size, desc="") as pbar:
+            for batch, (inputs, metadata) in enumerate(train_loader):
+                inputs, metadata = inputs.to(device), metadata.to(device)
+                embeddings = model.embedder(inputs)
+    
+                labels = metadata[:, 0]
+                metric_loss = model.metric_step(embeddings, labels)
+                class_loss = model.class_step(embeddings, labels)
+                total_loss = metric_loss + class_loss
+    
+                # Backpropagation
+                total_loss.backward()
+                opt.step()
+                opt.zero_grad()
+    
+                # Update progress bar
+                pbar.set_description(f"Epoch {epoch+1}, Loss: {total_loss.item():.6f},")
+                pbar.update(len(inputs))
+        
+        sched.step()
+        torch.save(model.state_dict(), f"{checkpoint_path}")
 
 
 
