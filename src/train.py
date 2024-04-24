@@ -162,7 +162,7 @@ if __name__ == "__main__":
     print("Train set mean:", dataset.zscore_mn)
     print("Train set SD:", dataset.zscore_sd)
 
-    train_loader, validation_loader = dataset.train_dataloader(), dataset.test_dataloader()
+    train_loader, validation_loader = dataset.train_dataloader(), dataset.val_dataloader()
 
 
     model = EyeKnowYouToo(
@@ -188,7 +188,9 @@ if __name__ == "__main__":
 
     # training
     model.train()
-    size = len(train_loader.dataset)
+    print(validation_loader)
+    size = len(train_loader.dataset) + len(validation_loader[0].dataset)
+
     for epoch in range(100):
         with tqdm.tqdm(total=size, desc="") as pbar:
             for batch, (inputs, metadata) in enumerate(train_loader):
@@ -206,13 +208,31 @@ if __name__ == "__main__":
                 opt.zero_grad()
     
                 # Update progress bar
-                pbar.set_description(f"Epoch {epoch+1}, Loss: {total_loss.item():.6f},")
+                pbar.set_description(f"Epoch {epoch+1}, Loss: {total_loss.item():.6f},  ")
                 pbar.update(len(inputs))
         
+
+            # validation
+            valid_loss = []
+            model.eval()
+            with torch.no_grad():
+                for batch, (inputs, metadata) in enumerate(validation_loader[0]):
+                    inputs, metadata = inputs.to(device), metadata.to(device)
+                    embeddings = model.embedder(inputs)
+            
+                    labels = metadata[:, 0]
+                    metric_loss = model.metric_step(embeddings, labels)
+                    class_loss = model.class_step(embeddings, labels)
+                    total_loss = metric_loss + class_loss
+
+                    # Update progress bar
+                    valid_loss.append(total_loss)
+                    pbar.update(len(inputs))
+
+
+                pbar.set_description(f"Epoch {epoch+1}, Validation Loss: {sum(valid_loss)/len(valid_loss):.6f},  ")
+        
+
+
         sched.step()
-        torch.save(model.state_dict(), f"{checkpoint_path}")
-
-
-
-
-
+        torch.save(model.state_dict(), checkpoint_path.with_name(checkpoint_stem + f"_epoch={epoch}.ckpt"))
