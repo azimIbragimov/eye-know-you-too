@@ -24,7 +24,7 @@ data/
 │   ├── gazebase_savgol_ds1_normal.pkl
 │   ├── gazebase_savgol_ds2_normal.pkl
 │   ├── gazebase_savgol_ds4_normal.pkl
-│   ├── gazebase_savgol_ds20_normal.pkl
 │   ├── gazebase_savgol_ds8_normal.pkl
+│   ├── gazebase_savgol_ds20_normal.pkl
 │   └── gazebase_savgol_ds32_normal.pkl
 ```
