@@ -223,7 +223,61 @@ if __name__ == "__main__":
         )
         path.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(path, index=False)
-    
 
+
+    # Validation
+    model.eval()
+    with torch.no_grad():
+        embeddings = []
+        metadata = []
+        with tqdm.tqdm(total=len(full_val_loader.dataset), desc="") as pbar:
+            for batch, (x, y) in enumerate(full_val_loader):
+                x, y = x.to(device), y.to(device)
+                pred = model.embedder(x)
+                pred, x, y = pred.detach().cpu(), x.detach().cpu(), y.detach().cpu()
+                embeddings.append(pred)
+                metadata.append(y)
+    
+                # Update progress bar
+                pbar.update(len(x))
+
+        embeddings = torch.cat(embeddings, dim=0).numpy()
+        metadata = torch.cat(metadata, dim=0).numpy()
+
+        print(embeddings)
+        print(metadata)
+        print(embeddings.shape, metadata.shape)
+
+        embed_dim = embeddings.shape[1]
+        embedding_dict = {
+            f"embed_dim_{i:03d}": embeddings[:, i]
+            for i in range(embed_dim)
+        }
+        full_dict = {
+            "nb_round": metadata[:, 1],
+            "nb_subject": metadata[:, 2],
+            "nb_session": metadata[:, 3],
+            "nb_task": metadata[:, 4],
+            "nb_subsequence": metadata[:, 5],
+            "exclude": metadata[:, 6],
+            **embedding_dict,
+        }
+        df = pd.DataFrame(full_dict)
+        df = df.sort_values(
+            by=[
+                "nb_round",
+                "nb_subject",
+                "nb_session",
+                "nb_task",
+                "nb_subsequence",
+            ],
+            axis=0,
+            ascending=True,
+        )
+        path = model.embeddings_path.with_name(
+            "val"  + "_" + model.embeddings_path.name
+        )
+        path.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(path, index=False)
 
 

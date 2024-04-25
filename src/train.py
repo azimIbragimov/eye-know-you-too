@@ -91,9 +91,6 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-
-
-
 if __name__ == "__main__": 
 
     # Hide all GPUs except the one we (maybe) want to use
@@ -173,11 +170,11 @@ if __name__ == "__main__":
    )
 
     # training
-    model.train()
     print(validation_loader)
     size = len(train_loader.dataset) + len(validation_loader[0].dataset)
 
     for epoch in range(100):
+        model.train()
         with tqdm.tqdm(total=size, desc="") as pbar:
             for batch, (inputs, metadata) in enumerate(train_loader):
                 inputs, metadata = inputs.to(device), metadata.to(device)
@@ -197,6 +194,8 @@ if __name__ == "__main__":
                 pbar.set_description(f"Epoch {epoch+1}, Loss: {total_loss.item():.6f},  ")
                 pbar.update(len(inputs))
         
+
+            sched.step()
 
             # validation
             valid_loss = []
@@ -220,5 +219,4 @@ if __name__ == "__main__":
         
 
 
-        sched.step()
         torch.save(model.state_dict(), checkpoint_path.with_name(checkpoint_stem + f"_epoch={epoch}.ckpt"))

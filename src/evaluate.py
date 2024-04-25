@@ -161,6 +161,7 @@ files_dict = {
     k: [embed_dir / "_".join([k, name]) for name in fold_names]
     for k in ("val", "test", "judo")
 }
+print(files_dict)
 has_judo = files_dict["judo"][0].exists()
 
 print(f"\nR{nb_round} {task} ensemble, first {n_seq} subsequences")
