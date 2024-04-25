@@ -29,7 +29,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--gazebase_dir",
-    default="./data/gazebase_v3",
+    default="./data",
     type=str,
     help="Path to directory to store GazeBase data files",
 )
