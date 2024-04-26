@@ -26,7 +26,10 @@ While the official implementation utilizes PyTorch Lightning, this repository of
   - [Sampling Rate](#sampling-rate)
 - [Dataset](#dataset)
 - [Training](#training)
-- [Pre-trained weights](#pre-trained-weights)
+  - [Instructions](#instructions)
+  - [Pre-trained weights](#pre-trained-weights)
+- [Testing](#testing)
+
 
 
 ## Comparison with the official repository
@@ -161,3 +164,50 @@ output/
 ├── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f2_epoch=99.ckpt
 └── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f3_epoch=99.ckpt
 ```
+
+## Testing
+If you already have trained models across all frequencies (or have downloaded weights for each frequency), then you can run the following command to test all the models:
+```bash
+bash test.sh
+```
+However, if you want to test a model at a specific frequency, please run the following command:
+```bash
+python src/test.py --ds=<ds_value> --fold=0
+python src/test.py --ds=<ds_value> --fold=1
+python src/test.py --ds=<ds_value> --fold=2
+python src/test.py --ds=<ds_value> --fold=3
+
+#Example when running the model on 125Hz:
+#python src/test.py --ds=8 --fold=0
+#python src/test.py --ds=8 --fold=1
+#python src/test.py --ds=8 --fold=2
+#python src/test.py --ds=8 --fold=3
+```
+
+## Evaluation
+Once the model has been tested, you can evaluate the results running the following command: 
+```bash
+python src/evaluate.py --model=<model_name>
+
+#Example when running 125 Hz model
+#python src/evaluate.py --model=ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal
+```
+
+## Acknowledgements
+We thank Dillon Lohr and Oleg Komogortsev for making their original implementation open-source to the public. Without this, implementation of this repository would not be possible. When using this repository, make sure to cite their paper listed in [citations](#citations) 
+
+## Citations
+@ARTICLE{9865991,
+  author={Lohr, Dillon and Komogortsev, Oleg V.},
+  journal={IEEE Transactions on Information Forensics and Security}, 
+  title={Eye Know You Too: Toward Viable End-to-End Eye Movement Biometrics for User Authentication}, 
+  year={2022},
+  volume={17},
+  number={},
+  pages={3151-3164},
+  keywords={Authentication;Biometrics (access control);Convolution;Transformers;Performance evaluation;Behavioral sciences;Task analysis;Eye tracking;user authentication;metric learning;template aging;permanence;signal quality},
+  doi={10.1109/TIFS.2022.3201369}}
+
+
+
+
