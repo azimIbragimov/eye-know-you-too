@@ -33,7 +33,8 @@ While the official implementation utilizes PyTorch Lightning, this repository of
   - [Pre-trained weights](#pre-trained-weights)
 - [Testing](#testing)
 - [Evaluation](#evaluation)
-
+- [Acknowledgements](#acknowledgements)
+- [Citations](#citations)
 
 
 ## 📊 Comparison with the official repository
