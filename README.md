@@ -3,8 +3,10 @@
     <img src="./assets/logo.png" height="300">
 </div>
 
-<p align="center">
-[![GitHub Repo stars]][Likes]
+<div align="center">
+  <img src="https://img.shields.io/github/stars/azimIbragimov/eye-know-you-too?style=for-the-badge&logo=Trustpilot&logoColor=white&labelColor=d0ab23&color=b0901e" alt="GitHub Repo stars">
+</div>
+
 <br>
 
 ---
@@ -101,4 +103,3 @@ data/
 ```
 
 
-[GitHub Repo stars]: https://img.shields.io/github/stars/azimIbragimov/eye-know-you-too?style=for-the-badge&logo=Trustpilot&logoColor=white&labelColor=d0ab23&color=b0901e
