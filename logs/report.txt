@@ -4,10 +4,10 @@ R1 HSS ensemble, first 1 subsequences
 --------------------
 P: 59
 N: 3422
-Rank-1 IR (%): 79.6610
-EER (%): 4.7341
-EER threshold: 0.3777
-d': 3.4283
+Rank-1 IR (%): 88.1356
+EER (%): 5.8738
+EER threshold: 0.3986
+d': 3.4720
 Using model: ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal
 
 R1 RAN ensemble, first 1 subsequences
@@ -15,9 +15,9 @@ R1 RAN ensemble, first 1 subsequences
 P: 59
 N: 3422
 Rank-1 IR (%): 83.0508
-EER (%): 6.4874
-EER threshold: 0.3373
-d': 3.1758
+EER (%): 5.0847
+EER threshold: 0.4170
+d': 3.2929
 Using model: ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal
 
 R1 TEX ensemble, first 1 subsequences
@@ -25,19 +25,19 @@ R1 TEX ensemble, first 1 subsequences
 P: 58
 N: 3364
 Rank-1 IR (%): 89.6552
-EER (%): 6.8966
-EER threshold: 0.3644
-d': 3.5845
+EER (%): 4.3995
+EER threshold: 0.4359
+d': 3.7149
 Using model: ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal
 
 R1 FXS ensemble, first 1 subsequences
 --------------------
 P: 59
 N: 3422
-Rank-1 IR (%): 52.5424
-EER (%): 12.9164
-EER threshold: 0.3021
-d': 2.4583
+Rank-1 IR (%): 64.4068
+EER (%): 11.8644
+EER threshold: 0.3850
+d': 2.6703
 Using model: ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal
 
 R1 VD1 ensemble, first 1 subsequences
@@ -45,376 +45,26 @@ R1 VD1 ensemble, first 1 subsequences
 P: 55
 N: 3135
 Rank-1 IR (%): 74.5455
-EER (%): 7.6236
-EER threshold: 0.3217
-d': 2.9161
+EER (%): 6.4115
+EER threshold: 0.3968
+d': 3.1482
 Using model: ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal
 
 R1 VD2 ensemble, first 1 subsequences
 --------------------
 P: 59
 N: 3422
-Rank-1 IR (%): 84.7458
-EER (%): 6.7797
-EER threshold: 0.3503
-d': 3.4862
+Rank-1 IR (%): 86.4407
+EER (%): 5.0847
+EER threshold: 0.4275
+d': 3.4864
 Using model: ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal
 
 R1 BLG ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 66.1017
-EER (%): 6.3998
-EER threshold: 0.3492
-d': 3.0936
-Using model: ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal
-
-R1 HSS ensemble, first 1 subsequences
---------------------
-P: 57
-N: 3306
-Rank-1 IR (%): 85.9649
-EER (%): 7.0175
-EER threshold: 0.4228
-d': 3.4052
-Using model: ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal
-
-R1 RAN ensemble, first 1 subsequences
---------------------
-P: 57
-N: 3306
-Rank-1 IR (%): 80.7018
-EER (%): 5.8681
-EER threshold: 0.4126
-d': 3.1598
-Using model: ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal
-
-R1 TEX ensemble, first 1 subsequences
---------------------
-P: 53
-N: 3079
-Rank-1 IR (%): 90.5660
-EER (%): 5.6604
-EER threshold: 0.4407
-d': 3.4538
-Using model: ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal
-
-R1 FXS ensemble, first 1 subsequences
---------------------
-P: 53
-N: 3083
-Rank-1 IR (%): 62.2642
-EER (%): 13.2075
-EER threshold: 0.3557
-d': 2.4635
-Using model: ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal
-
-R1 VD1 ensemble, first 1 subsequences
---------------------
-P: 52
-N: 3026
-Rank-1 IR (%): 76.9231
-EER (%): 7.6923
-EER threshold: 0.4001
-d': 2.8180
-Using model: ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal
-
-R1 VD2 ensemble, first 1 subsequences
---------------------
-P: 51
-N: 2974
-Rank-1 IR (%): 84.3137
-EER (%): 5.4808
-EER threshold: 0.4206
-d': 3.5872
-Using model: ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal
-
-R1 BLG ensemble, first 1 subsequences
---------------------
-P: 56
-N: 3248
-Rank-1 IR (%): 73.2143
-EER (%): 6.8042
-EER threshold: 0.4046
-d': 3.0136
-Using model: ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal
-
-R1 HSS ensemble, first 1 subsequences
---------------------
-P: 57
-N: 3306
-Rank-1 IR (%): 82.4561
-EER (%): 8.5602
-EER threshold: 0.4155
-d': 3.2159
-Using model: ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal
-
-R1 RAN ensemble, first 1 subsequences
---------------------
-P: 57
-N: 3306
-Rank-1 IR (%): 77.1930
-EER (%): 7.0478
-EER threshold: 0.4001
-d': 2.9789
-Using model: ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal
-
-R1 TEX ensemble, first 1 subsequences
---------------------
-P: 53
-N: 3079
-Rank-1 IR (%): 90.5660
-EER (%): 7.5472
-EER threshold: 0.4225
-d': 3.3456
-Using model: ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal
-
-R1 FXS ensemble, first 1 subsequences
---------------------
-P: 53
-N: 3083
-Rank-1 IR (%): 62.2642
-EER (%): 11.3208
-EER threshold: 0.3666
-d': 2.5465
-Using model: ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal
-
-R1 VD1 ensemble, first 1 subsequences
---------------------
-P: 52
-N: 3026
-Rank-1 IR (%): 63.4615
-EER (%): 9.6154
-EER threshold: 0.3888
-d': 2.7075
-Using model: ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal
-
-R1 VD2 ensemble, first 1 subsequences
---------------------
-P: 51
-N: 2974
-Rank-1 IR (%): 78.4314
-EER (%): 6.5232
-EER threshold: 0.4142
-d': 3.1988
-Using model: ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal
-
-R1 BLG ensemble, first 1 subsequences
---------------------
-P: 56
-N: 3248
-Rank-1 IR (%): 62.5000
-EER (%): 10.1601
-EER threshold: 0.3683
-d': 2.7036
-Using model: ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal
-
-R1 HSS ensemble, first 1 subsequences
 --------------------
 P: 59
 N: 3422
 Rank-1 IR (%): 79.6610
-EER (%): 6.7797
-EER threshold: 0.4311
-d': 2.9805
-Using model: ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal
-
-R1 RAN ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 67.7966
-EER (%): 10.3448
-EER threshold: 0.3900
-d': 2.4751
-Using model: ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal
-
-R1 TEX ensemble, first 1 subsequences
---------------------
-P: 57
-N: 3306
-Rank-1 IR (%): 68.4211
-EER (%): 8.7719
-EER threshold: 0.4107
-d': 2.7280
-Using model: ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal
-
-R1 FXS ensemble, first 1 subsequences
---------------------
-P: 53
-N: 3083
-Rank-1 IR (%): 41.5094
-EER (%): 9.4340
-EER threshold: 0.3936
-d': 2.3831
-Using model: ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal
-
-R1 VD1 ensemble, first 1 subsequences
---------------------
-P: 57
-N: 3307
-Rank-1 IR (%): 54.3860
-EER (%): 10.5263
-EER threshold: 0.3950
-d': 2.3767
-Using model: ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal
-
-R1 VD2 ensemble, first 1 subsequences
---------------------
-P: 57
-N: 3306
-Rank-1 IR (%): 50.8772
-EER (%): 10.5263
-EER threshold: 0.3872
-d': 2.3819
-Using model: ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal
-
-R1 BLG ensemble, first 1 subsequences
---------------------
-P: 52
-N: 3026
-Rank-1 IR (%): 51.9231
-EER (%): 11.5385
-EER threshold: 0.3782
-d': 2.4677
-Using model: ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal
-
-R1 HSS ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 61.0169
-EER (%): 8.8837
-EER threshold: 0.5009
-d': 2.3464
-Using model: ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal
-
-R1 RAN ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 45.7627
-EER (%): 15.2542
-EER threshold: 0.4620
-d': 2.0700
-Using model: ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal
-
-R1 TEX ensemble, first 1 subsequences
---------------------
-P: 58
-N: 3364
-Rank-1 IR (%): 36.2069
-EER (%): 16.5577
-EER threshold: 0.4694
-d': 1.8456
-Using model: ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal
-
-R1 FXS ensemble, first 1 subsequences
---------------------
-P: 58
-N: 3364
-Rank-1 IR (%): 20.6897
-EER (%): 27.5862
-EER threshold: 0.4468
-d': 1.1307
-Using model: ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal
-
-R1 VD1 ensemble, first 1 subsequences
---------------------
-P: 56
-N: 3193
-Rank-1 IR (%): 35.7143
-EER (%): 23.5515
-EER threshold: 0.4356
-d': 1.6822
-Using model: ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal
-
-R1 VD2 ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 33.8983
-EER (%): 16.9492
-EER threshold: 0.4628
-d': 1.6539
-Using model: ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal
-
-R1 BLG ensemble, first 1 subsequences
---------------------
-P: 56
-N: 3250
-Rank-1 IR (%): 16.0714
-EER (%): 24.9538
-EER threshold: 0.4249
-d': 1.3220
-Using model: ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal
-
-R1 HSS ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 30.5085
-EER (%): 16.3647
-EER threshold: 0.5271
-d': 1.6872
-Using model: ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal
-
-R1 RAN ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 22.0339
-EER (%): 21.5663
-EER threshold: 0.5072
-d': 1.4115
-Using model: ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal
-
-R1 TEX ensemble, first 1 subsequences
---------------------
-P: 58
-N: 3364
-Rank-1 IR (%): 10.3448
-EER (%): 32.7586
-EER threshold: 0.4870
-d': 0.9057
-Using model: ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal
-
-R1 FXS ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 6.7797
-EER (%): 37.2881
-EER threshold: 0.4847
-d': 0.8575
-Using model: ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal
-
-R1 VD1 ensemble, first 1 subsequences
---------------------
-P: 54
-N: 3078
-Rank-1 IR (%): 20.3704
-EER (%): 27.0630
-EER threshold: 0.4832
-d': 1.1051
-Using model: ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal
-
-R1 VD2 ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 15.2542
-EER (%): 34.4535
-EER threshold: 0.4754
-d': 0.9353
-Using model: ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal
-
-R1 BLG ensemble, first 1 subsequences
---------------------
-P: 59
-N: 3422
-Rank-1 IR (%): 6.7797
-EER (%): 36.5868
-EER threshold: 0.4650
-d': 0.7141
+EER (%): 6.2537
+EER threshold: 0.3917
+d': 3.2361
