@@ -4,8 +4,7 @@
 </div>
 
 <p align="center">
-![GitHub Repo stars](https://img.shields.io/github/stars/azimIbragimov/eye-know-you-too?style=for-the-badge&logo=Trustpilot&logoColor=white&labelColor=d0ab23&color=b0901e)
-
+[![GitHub Repo stars]][Likes]
 <br>
 
 ---
@@ -102,3 +101,4 @@ data/
 ```
 
 
+[GitHub Repo stars]: https://img.shields.io/github/stars/azimIbragimov/eye-know-you-too?style=for-the-badge&logo=Trustpilot&logoColor=white&labelColor=d0ab23&color=b0901e
