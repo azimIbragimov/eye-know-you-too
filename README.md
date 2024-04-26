@@ -4,6 +4,22 @@ This repository is an unofficial PyTorch implementation of the paper "Eye Know Y
 
 While the official implementation utilizes PyTorch Lightning, this repository offers a simpler alternative using standard PyTorch, which is more widely recognized and commonly used among researchers. This adaptation makes it easier for those familiar with PyTorch to understand and modify the code without needing to learn an additional framework.
 
+# Comparison with the official repository
+To ensure a fair evaluation of both implementations, we have retrained EKYT models using both the official and this repository. We then assessed their performance in terms of Equal Error Rate (EER %), with the results presented in the tables below. The difference in EER (%) is minimal, indicating a correct implementation in this repository. For some tasks, the original implementation performs slightly better; for others, the EER is the same across both approaches, and in some cases, our model slightly outperforms the original. These variations are mainly due to the stochastic nature of deep learning and are entirely random.
+
+| Task | Official Implementation (EER %) | Our Implementation (EER %) | 
+| -- | -- | -- |
+| TEX | 3.95 | 4.39 | 
+| HSS |  5.08  | 5.87  |
+| RAN |  5.08 | 5.08 |
+| FXS | 11.25  | 11.86  |
+| VD1 | 7.27  | 6.41 | 
+| VD2 | 4.96  | 5.08 |
+| BLG | 7.97  | 6.25 |
+ 
+
+
+
 ## Dataset
 We utilize the GazeBase dataset, the same one used in the original implementation. This dataset contains eye-tracking data recorded at 1000 Hz while participants engaged in various tasks such as watching videos, reading, etc. Upon initiating the training of the model, the script automatically downloads the dataset and processes it into .pkl files. The processing technique adheres to the descriptions in the referenced paper and the original implementation. It includes converting raw gaze coordinates into smoothed first derivative points using a Savitzky-Golay filter, followed by downsampling the recordings to the desired frequency. 
 
@@ -30,3 +46,5 @@ data/
 │   ├── gazebase_savgol_ds20_normal.pkl
 │   └── gazebase_savgol_ds32_normal.pkl
 ```
+
+
