@@ -1,6 +1,6 @@
 
 <div align="center">
-    <img src="./assets/logo.png" height="300">
+    <img src="./assets/logo.png" height="80%" width="80%">
 </div>
 
 <div align="center">
@@ -71,11 +71,11 @@ To ensure a fair evaluation of both implementations, we have retrained EKYT mode
 ### Sampling Rate
 | Sampling Rate (Hz) | Official Implementation (EER %) | Our Implementation (EER %) | 
 | -- | -- | -- |
-| 500 Hz | TBU | 5.66  |
-| 250 Hz | TBU | 5.19  |
-| 125 Hz | TBU | 8.74 |
-| 50 Hz | TBU | 13.79  |
-| 31.25 Hz | TBU | 22.41 |
+| 500 Hz | 5.66 | 5.66  |
+| 250 Hz | 6.13 | 5.19  |
+| 125 Hz | 8.77 | 8.74 |
+| 50 Hz | 13.79 | 13.79  |
+| 31.25 Hz | 25.72 | 22.41 |
 
 ## Dataset
 We utilize the GazeBase dataset, the same one used in the original implementation. This dataset contains eye-tracking data recorded at 1000 Hz while participants engaged in various tasks such as watching videos, reading, etc. Upon initiating the training of the model, the script automatically downloads the dataset and processes it into .pkl files. The processing technique adheres to the descriptions in the referenced paper and the original implementation. It includes converting raw gaze coordinates into smoothed first derivative points using a Savitzky-Golay filter, followed by downsampling the recordings to the desired frequency. 
