@@ -28,7 +28,7 @@ While the official implementation utilizes PyTorch Lightning, this repository of
   - [Conda](#conda)
   - [Docker](#docker)
 - [Dataset](#-dataset)
-- [Training](#EF%B8%8F-training)
+- [Training](#%EF%B8%8F-training)
   - [Instructions](#instructions)
   - [Pre-trained weights](#pre-trained-weights)
 - [Testing](#-testing)
