@@ -24,6 +24,9 @@ While the official implementation utilizes PyTorch Lightning, this repository of
   - [Test-retest Interval](#test-retest-interval)
   - [Duration](#duration)
   - [Sampling Rate](#sampling-rate)
+- [Environment](#environment)
+  - [Conda](#conda)
+  - [Docker](#docker)
 - [Dataset](#dataset)
 - [Training](#training)
   - [Instructions](#instructions)
@@ -84,6 +87,25 @@ To ensure a fair evaluation of both implementations, we have retrained EKYT mode
 | 125 Hz | 8.77 | 8.74 |
 | 50 Hz | 13.79 | 13.79  |
 | 31.25 Hz | 25.72 | 22.41 |
+
+
+## 🌳 Environment
+### Conda
+To install a Conda environment for this codebase, ensure that you have Conda installed on your system. Once this is done, run the following command:
+```bash
+conda env create -n eye-know-you-too python=3.11
+conda activate eye-know-you-too
+pip install -r requirements.yxy
+```
+### Docker
+First ensure that you have Docker installed, as well as any other NVIDIA drivers and toolkits. To build the Docker image from the Dockerfile, use the following command in the terminal. Make sure to execute this command in the directory where your Dockerfile is located.
+```bash
+docker build -t eye-know-you-image .
+```
+Once the image is built, you can run a container based on this image. Use the following command to start the container:
+```bash
+docker run --gpus all -it eye-know-you-image
+```
 
 ## 💿 Dataset
 We utilize the GazeBase dataset, the same one used in the original implementation. This dataset contains eye-tracking data recorded at 1000 Hz while participants engaged in various tasks such as watching videos, reading, etc. Upon initiating the training of the model, the script automatically downloads the dataset and processes it into .pkl files. The processing technique adheres to the descriptions in the referenced paper and the original implementation. It includes converting raw gaze coordinates into smoothed first derivative points using a Savitzky-Golay filter, followed by downsampling the recordings to the desired frequency. 
