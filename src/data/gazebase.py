@@ -135,7 +135,7 @@ class GazeBase():
             train_set,
             batch_size=batch_size,
             sampler=train_sampler,
-            num_workers=1,
+            num_workers=0,
         )
 
         # We want multiple "validation sets" for different purposes:
@@ -177,7 +177,7 @@ class GazeBase():
             batch_size=batch_size,
             shuffle=False,
             sampler=full_val_sampler,
-            num_workers=1,
+            num_workers=0,
         )
         self.val_loaders.append(full_val_loader)
 
@@ -196,7 +196,7 @@ class GazeBase():
                 val_tex_set,
                 batch_size=batch_size,
                 shuffle=False,
-                num_workers=1,
+                num_workers=0,
             )
             self.val_loaders.append(val_tex_loader)
 
@@ -216,7 +216,7 @@ class GazeBase():
                 train_tex_set,
                 batch_size=batch_size,
                 shuffle=False,
-                num_workers=1,
+                num_workers=0,
             )
             self.val_loaders.append(train_tex_loader)
 
@@ -235,7 +235,7 @@ class GazeBase():
                 test_set,
                 batch_size=batch_size,
                 shuffle=False,
-                num_workers=1,
+                num_workers=0,
             )
             self.test_loaders.append(test_loader)
             self.test_loaders.append(full_val_loader)

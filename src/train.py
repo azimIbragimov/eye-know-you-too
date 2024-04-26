@@ -29,7 +29,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--gazebase_dir",
-    default="./data/gazebase_v3",
+    default="./data/",
     type=str,
     help="Path to directory to store GazeBase data files",
 )
@@ -177,6 +177,8 @@ if __name__ == "__main__":
         model.train()
         with tqdm.tqdm(total=size, desc="") as pbar:
             for batch, (inputs, metadata) in enumerate(train_loader):
+                opt.zero_grad()
+
                 inputs, metadata = inputs.to(device), metadata.to(device)
                 embeddings = model.embedder(inputs)
     
@@ -188,12 +190,10 @@ if __name__ == "__main__":
                 # Backpropagation
                 total_loss.backward()
                 opt.step()
-                opt.zero_grad()
     
                 # Update progress bar
                 pbar.set_description(f"Epoch {epoch+1}, Loss: {total_loss.item():.6f},  ")
                 pbar.update(len(inputs))
-        
 
             sched.step()
 
