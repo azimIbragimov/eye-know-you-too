@@ -108,6 +108,11 @@ data/
 │   └── gazebase_savgol_ds32_normal.pkl
 ```
 
+Alternitavely, if you wish to download all pickle files at once, you can run the following command:
+```bash
+bash misc/download_dataset_pkl.sh
+```
+
 ## Training
 ### Instructions
 Once the dataset is placed in the correct directory, you can begin training the model. If you wish to train models across all frequencies (1000 Hz, 500 Hz, 250 Hz, 125 Hz, 50 Hz, and 31.25 Hz), you can run the following command:
@@ -141,3 +146,18 @@ If you wish to skip the training process, you can use pre-trained weights. The t
 | EyeKnowYouToo - 31.25 HZ | https://www.dropbox.com/scl/fo/zasfxht5df7i7i2e9huzj/ADHEpNrWKaWiN0El3VUpQGA?rlkey=50dduktd5qdwfzj7lbzddmqu2&st=5tdoooh9&dl=0 |
 
 *Note: Training was conducted on an NVIDIA A100 GPU with 80GB VRAM*
+
+Then place the weights in the following manner: 
+```bash
+output/
+├── ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal_f0_epoch=99.ckpt
+├── ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal_f1_epoch=99.ckpt
+├── ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal_f2_epoch=99.ckpt
+├── ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal_f3_epoch=99.ckpt
+├── ...
+├── ...
+├── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f0_epoch=99.ckpt
+├── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f1_epoch=99.ckpt
+├── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f2_epoch=99.ckpt
+└── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f3_epoch=99.ckpt
+```
