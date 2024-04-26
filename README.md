@@ -4,12 +4,8 @@
 </div>
 
 <div align="center">
-  <a href="https://faculty.eng.ufl.edu/jain/">
-	  <img src="https://img.shields.io/badge/JainLab-blue?style=for-the-badge"  alt="JainLab">
-  </a>
-  <a href="https://www.linkedin.com/in/azim-ibragimov/">
-  	<img src="https://img.shields.io/badge/Azim%20Ibragimov-green?style=for-the-badge"  alt="Azim Ibragimov">
-  </a>
+  <a href="https://faculty.eng.ufl.edu/jain/"><img src="https://img.shields.io/badge/JainLab-yellow?style=for-the-badge"  alt="JainLab"></a>
+  <a href="https://www.linkedin.com/in/azim-ibragimov/"><img src="https://img.shields.io/badge/Azim%20Ibragimov-yellow?style=for-the-badge"  alt="Azim Ibragimov"></a>
   <img src="https://img.shields.io/github/stars/azimIbragimov/eye-know-you-too?style=for-the-badge&logo=Trustpilot&logoColor=white&labelColor=d0ab23&color=b0901e" alt="GitHub Repo stars">
 </div>
 
