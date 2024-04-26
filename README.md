@@ -25,10 +25,13 @@ While the official implementation utilizes PyTorch Lightning, this repository of
   - [Duration](#duration)
   - [Sampling Rate](#sampling-rate)
 - [Dataset](#dataset)
+- [Pre-trained weights](#pre-trained-weights)
 
 
 ## Comparison with the official repository
 To ensure a fair evaluation of both implementations, we have retrained EKYT models using both the official and this repository. We then assessed their performance in terms of Equal Error Rate (EER %), with the results presented in the tables below. The difference in EER (%) is minimal, indicating a correct implementation in this repository. For some tasks, the original implementation performs slightly better; for others, the EER is the same across both approaches, and in some cases, our model slightly outperforms the original. These variations are mainly due to the stochastic nature of deep learning and are entirely random.
+
+**Note: To verify the results, you can download the re-trained original codebase weights [here](https://www.dropbox.com/scl/fo/ziqke9npi1qfpvwb50cgj/AN7Mzr8tsfn0LyggwgREvb0?rlkey=261gnvsxwgoqult6kpyguhc3l&st=vmpzirwn&dl=0) and weights from this codebase in section #pre-trained-weights**
 
 ### Task Group
 | Task | Official Implementation (EER %) | Our Implementation (EER %) | 
@@ -104,4 +107,5 @@ data/
 │   └── gazebase_savgol_ds32_normal.pkl
 ```
 
-
+## Pre-trained weights
+TBU
