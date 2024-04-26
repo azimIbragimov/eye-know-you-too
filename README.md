@@ -95,7 +95,7 @@ To install a Conda environment for this codebase, ensure that you have Conda ins
 ```bash
 conda env create -n eye-know-you-too python=3.11
 conda activate eye-know-you-too
-pip install -r requirements.yxy
+pip install -r requirements.txt
 ```
 ### Docker
 First ensure that you have Docker installed, as well as any other NVIDIA drivers and toolkits. To build the Docker image from the Dockerfile, use the following command in the terminal. Make sure to execute this command in the directory where your Dockerfile is located.
