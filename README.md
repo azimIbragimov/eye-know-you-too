@@ -18,8 +18,41 @@ To ensure a fair evaluation of both implementations, we have retrained EKYT mode
 | VD2 | 4.96  | 5.08 |
 | BLG | 7.97  | 6.25 |
  
+### Test-retest Interval
+| Round | Official Implementation (EER %) | Our Implementation (EER %) | 
+| -- | -- | -- |
+| R2 | 9.21 | 6.89 |
+| R3 | 6.89 | 8.26  |
+| R4 | 9.21 | 8.62  |
+| R5 | 9.73 | 6.89  |
+| R6 | 6.89 | 6.15  |
+| R7 | 8.82 | 8.82  |
+| R8 | 10.00 | 8.18  |
+| R9 | 7.69  | 7.69  |
 
+### Duration
+| Duration (s) | Official Implementation (EER %) | Our Implementation (EER %) | 
+| -- | -- | -- |
+| 5 x 2 | 1.72 | 3.44  | 
+| 5 x 3 | 1.69 | 1.69  | 
+| 5 x 4 | 1.11 | 0.40  | 
+| 5 x 5 | 1.02 | 0.49   | 
+| 5 x 6 | 0.81 | 0.49   | 
+| 5 x 7 | 0.61 | 0.61  | 
+| 5 x 8 | 0.49 | 0.61   | 
+| 5 x 9 | 0.49 | 0.61  | 
+| 5 x 10 | 0.37 | 0.61   | 
+| 5 x 11 | 0.55 | 0.54  | 
+| 5 x 12 | 0.46 | 0.75  | 
 
+### Sampling Rate
+| Sampling Rate (Hz) | Official Implementation (EER %) | Our Implementation (EER %) | 
+| -- | -- | -- |
+| 500 Hz | TBU | 5.66  |
+| 250 Hz | TBU | 5.19  |
+| 125 Hz | TBU | 8.74 |
+| 50 Hz | TBU | 13.79  |
+| 31.25 Hz | TBU | 22.41 |
 
 ## Dataset
 We utilize the GazeBase dataset, the same one used in the original implementation. This dataset contains eye-tracking data recorded at 1000 Hz while participants engaged in various tasks such as watching videos, reading, etc. Upon initiating the training of the model, the script automatically downloads the dataset and processes it into .pkl files. The processing technique adheres to the descriptions in the referenced paper and the original implementation. It includes converting raw gaze coordinates into smoothed first derivative points using a Savitzky-Golay filter, followed by downsampling the recordings to the desired frequency. 
