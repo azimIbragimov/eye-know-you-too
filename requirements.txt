@@ -1,0 +1,6 @@
+torch==2.3.*
+tqdm==4.66.*
+numpy==1.26.*
+pandas==1.5.3
+pytorch_metric_learning==2.5.*
+requests==2.31.*
