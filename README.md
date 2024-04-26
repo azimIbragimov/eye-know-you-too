@@ -25,6 +25,7 @@ While the official implementation utilizes PyTorch Lightning, this repository of
   - [Duration](#duration)
   - [Sampling Rate](#sampling-rate)
 - [Dataset](#dataset)
+- [Training](#training)
 - [Pre-trained weights](#pre-trained-weights)
 
 
@@ -107,12 +108,36 @@ data/
 │   └── gazebase_savgol_ds32_normal.pkl
 ```
 
-## Pre-trained weights
+## Training
+### Instructions
+Once the dataset is placed in the correct directory, you can begin training the model. If you wish to train models across all frequencies (1000 Hz, 500 Hz, 250 Hz, 125 Hz, 50 Hz, and 31.25 Hz), you can run the following command:
+```bash
+bash train.sh
+```
+However, if you want to train a model at a specific frequency, please run the following command:
+```bash
+python src/train.py --ds=<ds_value> --fold=0
+python src/train.py --ds=<ds_value> --fold=1
+python src/train.py --ds=<ds_value> --fold=2
+python src/train.py --ds=<ds_value> --fold=3
+
+#Example when running the model on 125Hz:
+#python src/train.py --ds=8 --fold=0
+#python src/train.py --ds=8 --fold=1
+#python src/train.py --ds=8 --fold=2
+#python src/train.py --ds=8 --fold=3
+```
+
+### Pre-trained weights
+If you wish to skip the training process, you can use pre-trained weights. The table below provides the links from where you can obtain the weights.
+
 | Name | Link |
 | -- | -- |
-| EyeKnowYouToo - 1000HZ | https://www.dropbox.com/scl/fo/sn0qcmind2ln5gkmrvvwe/AFjySWnObz3nkjt0lXsOCIw?rlkey=iypaeama71eua1ww7qanl201q&st=xq0o65cn&dl=0 |
-| EyeKnowYouToo - 500HZ | https://www.dropbox.com/scl/fo/xp2zkr5xvyakcoudrus6i/ANA4DJfYEFxPpIYnrJE0MTE?rlkey=hjporj7qet0dqr653rcua62ww&st=3e62k9hi&dl=0 |
-| EyeKnowYouToo - 250 HZ | https://www.dropbox.com/scl/fo/rwfrgflkjveslq9shzsri/ALIbUo__eDNyx1e3mkC5klI?rlkey=w8z6p5z2tjgw763uc1me8cba3&st=okwhikp0&dl=0 | 
-| EyeKnowYouToo - 125 HZ | https://www.dropbox.com/scl/fo/to2ad1bpzscc639a59a9l/AKBTpm8tR9RKSVCB-EW06L8?rlkey=zgxpwoykn0u69nsc7bt0ahnd4&st=ro9u2qoh&dl=0 |
-| EyeKnowYouToo - 50 HZ | https://www.dropbox.com/scl/fo/k5wg2fqjtji1psipzfx2h/ABe4uapHBuKz309iRzPX2Q0?rlkey=23oygl98nmwlf7hjw8k2hljs2&st=4opred38&dl=0 |
-| EyeKnowYouToo - 31.25 HZ | https://www.dropbox.com/scl/fo/zasfxht5df7i7i2e9huzj/ADHEpNrWKaWiN0El3VUpQGA?rlkey=rudoprca3dtqiux4k6q4fix3u&st=z23jdq28&dl=0 |
+| EyeKnowYouToo - 1000HZ | https://www.dropbox.com/scl/fo/sn0qcmind2ln5gkmrvvwe/AFjySWnObz3nkjt0lXsOCIw?rlkey=uus626eexxonx5p1735jq34x0&st=vz9ux8es&dl=0 |
+| EyeKnowYouToo - 500HZ | https://www.dropbox.com/scl/fo/xp2zkr5xvyakcoudrus6i/ANA4DJfYEFxPpIYnrJE0MTE?rlkey=3v75adr7n3txtmov71pci9lqr&st=13ui29tf&dl=0  |
+| EyeKnowYouToo - 250 HZ | https://www.dropbox.com/scl/fo/rwfrgflkjveslq9shzsri/ALIbUo__eDNyx1e3mkC5klI?rlkey=04i7furdytgby266oqxjkowmp&st=jq3vdebz&dl=0 | 
+| EyeKnowYouToo - 125 HZ | https://www.dropbox.com/scl/fo/to2ad1bpzscc639a59a9l/AKBTpm8tR9RKSVCB-EW06L8?rlkey=vqjtnu0ckv92g5wz6r6mdpod8&st=glu1uvne&dl=0 |
+| EyeKnowYouToo - 50 HZ | https://www.dropbox.com/scl/fo/k5wg2fqjtji1psipzfx2h/ABe4uapHBuKz309iRzPX2Q0?rlkey=z5fsiic0ou20lbwx39dkxbsl3&st=21ley2ct&dl=0 |
+| EyeKnowYouToo - 31.25 HZ | https://www.dropbox.com/scl/fo/zasfxht5df7i7i2e9huzj/ADHEpNrWKaWiN0El3VUpQGA?rlkey=50dduktd5qdwfzj7lbzddmqu2&st=5tdoooh9&dl=0 |
+
+*Note: Training was conducted on an NVIDIA A100 GPU with 80GB VRAM*
