@@ -4,6 +4,12 @@
 </div>
 
 <div align="center">
+  <a href="https://faculty.eng.ufl.edu/jain/">
+	  <img src="https://img.shields.io/badge/JainLab-blue?style=for-the-badge"  alt="JainLab">
+  </a>
+  <a href="https://www.linkedin.com/in/azim-ibragimov/">
+  	<img src="https://img.shields.io/badge/Azim%20Ibragimov-green?style=for-the-badge"  alt="Azim Ibragimov">
+  </a>
   <img src="https://img.shields.io/github/stars/azimIbragimov/eye-know-you-too?style=for-the-badge&logo=Trustpilot&logoColor=white&labelColor=d0ab23&color=b0901e" alt="GitHub Repo stars">
 </div>
 
@@ -11,7 +17,7 @@
 
 ---
 
-# Unnoficial Pytorch Implementation: Eye Know You Too
+# Eye Know You Too
 This repository is an unofficial PyTorch implementation of the paper "Eye Know You Too: Toward Viable End-to-End Eye Movement Biometrics for User Authentication." The official implementation is available [here](https://dataverse.tdl.org/dataset.xhtml?persistentId=doi:10.18738/T8/61ZGZN).
 
 While the official implementation utilizes PyTorch Lightning, this repository offers a simpler alternative using standard PyTorch, which is more widely recognized and commonly used among researchers. This adaptation makes it easier for those familiar with PyTorch to understand and modify the code without needing to learn an additional framework.
