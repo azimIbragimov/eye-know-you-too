@@ -31,10 +31,10 @@ While the official implementation utilizes PyTorch Lightning, this repository of
 - [Training](#-training)
   - [Instructions](#instructions)
   - [Pre-trained weights](#pre-trained-weights)
-- [Testing](#-testing)
+- [Testing](#%EF%B8%8F-training)
 - [Evaluation](#-evaluation)
 - [Acknowledgements](#-acknowledgements)
-- [Citations](#-citations)
+- [Citations](#%EF%B8%8F-citations)
 
 
 ## 📊 Comparison with the official repository
