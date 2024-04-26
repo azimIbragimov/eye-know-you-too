@@ -108,4 +108,11 @@ data/
 ```
 
 ## Pre-trained weights
-TBU
+| Name | Link |
+| -- | -- |
+| EyeKnowYouToo - 1000HZ | https://www.dropbox.com/scl/fo/sn0qcmind2ln5gkmrvvwe/AFjySWnObz3nkjt0lXsOCIw?rlkey=iypaeama71eua1ww7qanl201q&st=xq0o65cn&dl=0 |
+| EyeKnowYouToo - 500HZ | https://www.dropbox.com/scl/fo/xp2zkr5xvyakcoudrus6i/ANA4DJfYEFxPpIYnrJE0MTE?rlkey=hjporj7qet0dqr653rcua62ww&st=3e62k9hi&dl=0 |
+| EyeKnowYouToo - 250 HZ | https://www.dropbox.com/scl/fo/rwfrgflkjveslq9shzsri/ALIbUo__eDNyx1e3mkC5klI?rlkey=w8z6p5z2tjgw763uc1me8cba3&st=okwhikp0&dl=0 | 
+| EyeKnowYouToo - 125 HZ | https://www.dropbox.com/scl/fo/to2ad1bpzscc639a59a9l/AKBTpm8tR9RKSVCB-EW06L8?rlkey=zgxpwoykn0u69nsc7bt0ahnd4&st=ro9u2qoh&dl=0 |
+| EyeKnowYouToo - 50 HZ | https://www.dropbox.com/scl/fo/k5wg2fqjtji1psipzfx2h/ABe4uapHBuKz309iRzPX2Q0?rlkey=23oygl98nmwlf7hjw8k2hljs2&st=4opred38&dl=0 |
+| EyeKnowYouToo - 31.25 HZ | https://www.dropbox.com/scl/fo/zasfxht5df7i7i2e9huzj/ADHEpNrWKaWiN0El3VUpQGA?rlkey=rudoprca3dtqiux4k6q4fix3u&st=z23jdq28&dl=0 |
