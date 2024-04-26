@@ -1,6 +1,6 @@
 # Eye Know You Too
 
-<img src="./assets/logo.png" height="300">
+<img src="./assets/logo.png">
 
 
 This repository is an unofficial PyTorch implementation of the paper "Eye Know You Too: Toward Viable End-to-End Eye Movement Biometrics for User Authentication." The official implementation is available [here](https://dataverse.tdl.org/dataset.xhtml?persistentId=doi:10.18738/T8/61ZGZN).
