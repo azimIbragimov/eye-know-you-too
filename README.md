@@ -19,22 +19,22 @@ This repository is an unofficial PyTorch implementation of the paper "Eye Know Y
 While the official implementation utilizes PyTorch Lightning, this repository offers a simpler alternative using standard PyTorch, which is more widely recognized and commonly used among researchers. This adaptation makes it easier for those familiar with PyTorch to understand and modify the code without needing to learn an additional framework.
 
 ## 📔 Table of Contents
-- [Comparison with the official repository](#comparison-with-the-official-repository)
+- [Comparison with the official repository](#-comparison-with-the-official-repository)
   - [Task Group](#task-group)
   - [Test-retest Interval](#test-retest-interval)
   - [Duration](#duration)
   - [Sampling Rate](#sampling-rate)
-- [Environment](#environment)
+- [Environment](#-environment)
   - [Conda](#conda)
   - [Docker](#docker)
-- [Dataset](#dataset)
-- [Training](#training)
+- [Dataset](#-dataset)
+- [Training](#-training)
   - [Instructions](#instructions)
   - [Pre-trained weights](#pre-trained-weights)
-- [Testing](#testing)
-- [Evaluation](#evaluation)
-- [Acknowledgements](#acknowledgements)
-- [Citations](#citations)
+- [Testing](#-testing)
+- [Evaluation](#-evaluation)
+- [Acknowledgements](#-acknowledgements)
+- [Citations](#-citations)
 
 
 ## 📊 Comparison with the official repository
