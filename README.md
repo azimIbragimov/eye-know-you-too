@@ -94,7 +94,7 @@ To ensure a fair evaluation of both implementations, we have retrained EKYT mode
 ### Conda
 To install a Conda environment for this codebase, ensure that you have Conda installed on your system. Once this is done, run the following command:
 ```bash
-conda env create -n eye-know-you-too python=3.11
+conda create -n eye-know-you-too python=3.11
 conda activate eye-know-you-too
 pip install -r requirements.txt
 ```
