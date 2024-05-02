@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     wget
 
 # Clone the desired repository
-RUN git clone https://github.com/azimIbragimov/eye-know-you-too.git
+RUN git clone https://github.com/azimIbragimov/eye-know-you-too.git /eye-know-you-too
 
 # Change working directory to the cloned repository
 WORKDIR /eye-know-you-too
