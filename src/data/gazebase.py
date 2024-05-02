@@ -251,7 +251,6 @@ class GazeBase():
 
     def download_and_process_gazebase(self) -> None:
         # Download and extract GazeBase archives if necessary
-        print(len([f for f in self.raw_file_dir.iterdir() if f.name != ".gitkeep"]))
         if len([f for f in self.raw_file_dir.iterdir() if f.name != ".gitkeep"]) == 0 or self.tmp_file_dir.exists():
             self.archive_path.parent.mkdir(parents=True, exist_ok=True)
             if not self.archive_path.exists():
