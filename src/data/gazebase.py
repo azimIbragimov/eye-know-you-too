@@ -251,7 +251,8 @@ class GazeBase():
 
     def download_and_process_gazebase(self) -> None:
         # Download and extract GazeBase archives if necessary
-        if not self.raw_file_dir.exists() or self.tmp_file_dir.exists():
+        print(len([f for f in self.raw_file_dir.iterdir() if f.name != ".gitkeep"]))
+        if len([f for f in self.raw_file_dir.iterdir() if f.name != ".gitkeep"]) == 0 or self.tmp_file_dir.exists():
             self.archive_path.parent.mkdir(parents=True, exist_ok=True)
             if not self.archive_path.exists():
                 print("Downloading GazeBase from figshare")
@@ -287,7 +288,8 @@ class GazeBase():
 
         # Process recordings
         filename_pattern = r"S_(\d)(\d+)_S(\d)_(\w+)"
-        recording_paths = sorted(list(self.raw_file_dir.iterdir()))
+        recording_paths = sorted([i for i in self.raw_file_dir.iterdir() if i.name != ".gitkeep"])
+        print(recording_paths)
         inputs = []
         labels = []
         print("Processing all recordings")

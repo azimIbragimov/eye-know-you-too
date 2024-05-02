@@ -1,0 +1,11 @@
+# Ignore Python cache files/directories
+__pycache__/
+*.pyc
+
+# Ignore checkpoint model weights
+*.ckpt
+
+# Ignore CSV files
+*.csv
+*.pkl
+*.zip
