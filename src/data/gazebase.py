@@ -96,14 +96,12 @@ class GazeBase():
         with open(self.processed_path, "rb") as f:
             data_dict = pickle.load(f)
 
-        print(len(data_dict["fold0"]["inputs"][0]))
-
-        train_X = [
-            x.T  # shape: (feature, seq)
-            for split, v in data_dict.items()
-            if split not in (fold_label, "test")
-            for x in v["inputs"]
-        ]
+#        train_X = [
+#            x.T  # shape: (feature, seq)
+#            for split, v in data_dict.items()
+#            if split not in (fold_label, "test")
+#            for x in v["inputs"]
+#        ]
         train_y = pd.concat(
             [
                 v["labels"]
@@ -116,11 +114,12 @@ class GazeBase():
 
         # Remove BLG data from train set
         is_train_blg = train_y["task"].str.fullmatch("BLG")
-        train_X = [x for x, is_blg in zip(train_X, is_train_blg) if not is_blg]
+#        train_X = [x for x, is_blg in zip(train_X, is_train_blg) if not is_blg]
         train_y = train_y.loc[~is_train_blg, :]
 
         train_set = SubsequenceDataset(
-            train_X, train_y, self.subsequence_length, mn=None, sd=None
+#            train_X, 
+            train_y, self.subsequence_length, mn=None, sd=None
         )
         self.zscore_mn = train_set.mn
         self.zscore_sd = train_set.sd
@@ -144,18 +143,18 @@ class GazeBase():
         # 2. TEX-only val set for measuring MAP@R
         # 3. TEX-only train set for measuring MAP@R
         # If we don't want to measure MAP@R, (2) and (3) can be omitted.
-        val_X = [x.T for x in data_dict[fold_label]["inputs"]]
+#        val_X = [x.T for x in data_dict[fold_label]["inputs"]]
         val_y = data_dict[fold_label]["labels"]
         self.val_loaders = []
 
         if stage != "test":
             # Remove BLG data from val set when training/tuning
             is_val_blg = val_y["task"].str.fullmatch("BLG")
-            val_X = [x for x, is_blg in zip(val_X, is_val_blg) if not is_blg]
+#            val_X = [x for x, is_blg in zip(val_X, is_val_blg) if not is_blg]
             val_y = val_y.loc[~is_val_blg, :]
 
         full_val_set = SubsequenceDataset(
-            val_X,
+#            val_X,
             val_y,
             self.subsequence_length,
             mn=self.zscore_mn,
@@ -183,10 +182,10 @@ class GazeBase():
 
         if stage != "test" and self.compute_map_at_r:
             val_is_tex = val_y["task"].str.fullmatch("TEX")
-            val_tex_X = [x for x, is_tex in zip(val_X, val_is_tex) if is_tex]
+#           val_tex_X = [x for x, is_tex in zip(val_X, val_is_tex) if is_tex]
             val_tex_y = val_y.loc[val_is_tex, :]
             val_tex_set = SubsequenceDataset(
-                val_tex_X,
+#                val_tex_X,
                 val_tex_y,
                 self.subsequence_length,
                 mn=self.zscore_mn,
@@ -201,12 +200,12 @@ class GazeBase():
             self.val_loaders.append(val_tex_loader)
 
             train_is_tex = train_y["task"].str.fullmatch("TEX")
-            train_tex_X = [
-                x for x, is_tex in zip(train_X, train_is_tex) if is_tex
-            ]
+#            train_tex_X = [
+#                x for x, is_tex in zip(train_X, train_is_tex) if is_tex
+#            ]
             train_tex_y = train_y.loc[train_is_tex, :]
             train_tex_set = SubsequenceDataset(
-                train_tex_X,
+#                train_tex_X,
                 train_tex_y,
                 self.subsequence_length,
                 mn=self.zscore_mn,
@@ -222,10 +221,10 @@ class GazeBase():
 
         self.test_loaders = []
         if stage == "test":
-            test_X = [x.T for x in data_dict["test"]["inputs"]]
+#            test_X = [x.T for x in data_dict["test"]["inputs"]]
             test_y = data_dict["test"]["labels"]
             test_set = SubsequenceDataset(
-                test_X,
+#                test_X,
                 test_y,
                 self.subsequence_length,
                 mn=self.zscore_mn,
@@ -303,7 +302,8 @@ class GazeBase():
             vel = savgol_filter(gaze, 7, 2, deriv=1, axis=0, mode="nearest")
             vel *= ideal_sampling_rate  # deg/sec
 
-            inputs.append(vel.astype(np.float32))
+
+#            inputs.append(vel.astype(np.float32))
 
 
             pattern_match = re.match(filename_pattern, path.stem)
@@ -315,6 +315,10 @@ class GazeBase():
                 "task": match_groups[3],
             }
             labels.append(label)
+
+            # CHANGE
+            np.save(f"tmp/{match_groups[0]}_{match_groups[1]}_{match_groups[2]}_{match_groups[3]}.npy", vel.astype(np.float32))
+
         labels_df = pd.DataFrame(labels)
 
         # The test set contains all the data from subjects who are
@@ -357,7 +361,7 @@ class GazeBase():
         def get_split_data(split_subjects):
             split_indices = np.where(subjects.isin(split_subjects))[0]
             return {
-                "inputs": [inputs[i] for i in split_indices],
+#                "inputs": [inputs[i] for i in split_indices],
                 "labels": labels_df.iloc[split_indices, :],
             }
 
