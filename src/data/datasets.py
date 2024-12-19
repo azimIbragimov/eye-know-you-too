@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
+from pathlib import Path
+
 
 TASK_TO_NUM = {
     "HSS": 0,
@@ -29,10 +31,12 @@ class SubsequenceDataset(Dataset):
 #        sequences: List[np.ndarray],
         labels: pd.DataFrame,
         subsequence_length: int,
+        processed_path: Path,
         mn: Optional[float] = None,
         sd: Optional[float] = None,
     ):
         super().__init__()
+        self.processed_path = processed_path
 
 #        samples = []
         subjects = []
@@ -58,7 +62,7 @@ class SubsequenceDataset(Dataset):
             nb_session = int(label["nb_session"])
             nb_task = TASK_TO_NUM[label["task"]]
 
-            recording = np.load(f"tmp/{label['nb_round']}_{label['nb_subject']}_{label['nb_session']}_{label['task']}.npy")
+            recording = np.load(self.processed_path / f"{label['nb_round']}_{label['nb_subject']}_{label['nb_session']}_{label['task']}.npy")
             n += 1
             mn_temp += np.nanmean(recording)
             sd_temp += np.nanstd(recording)
@@ -85,19 +89,12 @@ class SubsequenceDataset(Dataset):
             metadata["nb_subsequence"].extend(nb_subsequence)
             metadata["exclude"].extend(exclude.numpy())
 
-#        self.samples = torch.cat(samples, dim=0)
         self.metadata = pd.DataFrame(metadata)
 
         self.subjects = torch.cat(subjects, dim=0)
         unique_subjects = self.subjects.unique()
         self.classes = torch.bucketize(self.subjects, unique_subjects)
         self.n_classes = len(unique_subjects)
-
-#        if mn is None or sd is None:
-#            x = torch.clamp(self.samples, min=-1000.0, max=1000.0).numpy()
-#            mn = np.nanmean(x)
-#            sd = np.nanstd(x)
-
 
         if mn is None or sd is None:
             mn = mn_temp / n
@@ -116,7 +113,8 @@ class SubsequenceDataset(Dataset):
         y = self.metadata.iloc[index, :].to_dict()
         y["class"] = self.classes[index]
 
-        recording = np.load(f"tmp/{y['nb_round']}_{y['nb_subject']:03}_{y['nb_session']}_{list(TASK_TO_NUM.keys())[y['nb_task']]}.npy")
+        recording = np.load( self.processed_path /
+            f"{y['nb_round']}_{y['nb_subject']:03}_{y['nb_session']}_{list(TASK_TO_NUM.keys())[y['nb_task']]}.npy")
 
 
         # Extract fixed-length, non-overlapping subsequences
@@ -125,9 +123,7 @@ class SubsequenceDataset(Dataset):
         subsequences = recording_tensor.unfold(
                 dimension=-1, size=self.subsequence_length, step=self.subsequence_length
         )
-#        print(subsequences.shape)
         subsequences = subsequences.swapdims(0,1)  # (batch, feature, seq)
-#        print(subsequences.shape)
 
         x = subsequences[y['nb_subsequence']]
         x = torch.clamp(x, min=-1000.0, max=1000.0)
@@ -149,5 +145,4 @@ class SubsequenceDataset(Dataset):
                 )
             ]
         )
-        #print(y)
         return x, y
