@@ -4,6 +4,7 @@ from pathlib import Path
 import torch
 import tqdm
 import pandas as pd
+import yaml
 
 from data.gazebase import GazeBase
 from models.modules import EyeKnowYouToo
@@ -11,9 +12,12 @@ from models.modules import EyeKnowYouToo
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument("--config", default="./configs/default.yaml", type=str, help="Path to the YAML file containing default values")
+
+
 parser.add_argument(
     "--fold",
-    default=0,
+    default=None,
     type=int,
     choices=[0, 1, 2, 3],
     help="The fold to use as the validation set.  Must train one model per fold to enable evaluation.",
@@ -24,10 +28,10 @@ parser.add_argument(
     help="Flag indicating to compute MAP@R while training",
 )
 parser.add_argument(
-    "--w_ms", default=1.0, type=float, help="Weight for multi-similarity loss"
+    "--w_ms", default=None, type=float, help="Weight for multi-similarity loss"
 )
 parser.add_argument(
-    "--w_ce", default=0.1, type=float, help="Weight for cross-entropy loss"
+    "--w_ce", default=None, type=float, help="Weight for cross-entropy loss"
 )
 parser.add_argument(
     "--gazebase_dir",
@@ -37,85 +41,94 @@ parser.add_argument(
 )
 parser.add_argument(
     "--log_dir",
-    default="./logs",
+    default=None,
     type=str,
     help="Path to directory to store Tensorboard logs",
 )
 parser.add_argument(
     "--ckpt_dir",
-    default="./output",
+    default=None,
     type=str,
     help="Path to directory to store model checkpoints",
 )
 
 parser.add_argument(
     "--seq_len",
-    default=5000,
+    default=None,
     type=int,
     help="Length of input sequences (prior to downsampling)",
 )
 parser.add_argument(
     "--batch_samples",
-    default=16,
+    default=None,
     type=int,
     help="Number of classes sampled per minibatch",
 )
 parser.add_argument(
     "--batch_classes",
-    default=16,
+    default=None,
     type=int,
     help="Number of classes sampled per minibatch",
 )
 parser.add_argument(
     "--batch_size_for_testing",
-    default=256,
+    default=None,
     type=int,
     help="Number of sequences sampled per class per minibatch",
 )
 parser.add_argument(
     "--ds",
-    default=1,
+    default=None,
     type=int,
     choices=[1, 2, 4, 8, 20, 32],
     help="Downsample factor.  Supported factors are 1 (1000 Hz), 2 (500 Hz), 4 (250 Hz), 8 (125 Hz), 20 (50 Hz), or 32 (31.25 Hz).",
 )
 parser.add_argument(
-    "--cpu",
-    action="store_true",
+    "--device",
+    default=None,
+    type=str,
     help="Flag indicating to use the CPU instead of a GPU",
 )
 
 parser.add_argument(
     "--degrade_precision",
+    default=None,
     action="store_true",
     help="Flag indicating to degrade spatial precision by adding white noise with SD=0.5 deg",
 )
 parser.add_argument(
     "--embed_dir",
-    default="./embeddings",
+    default=None,
     type=str,
     help="Path to directory to store embeddings",
 )
 
+# Parse CLI arguments
 args = parser.parse_args()
+
+# Load defaults from YAML configuration
+with open(args.config, 'r') as f:
+    defaults = yaml.safe_load(f)
+
+args_dict = vars(args)
+for key, value in defaults.items():
+    if key in args_dict:
+        if args_dict[key] is None:
+            args_dict[key] = value
+    else:
+        args_dict[key] = value
+
+
+# You can now access the updated arguments
+print(args_dict)
 
 if __name__ == "__main__": 
 
     # Hide all GPUs except the one we (maybe) want to use
-    device = "cpu" if args.cpu or not torch.cuda.is_available() else "cuda"
+    device = args.device
     
-    checkpoint_stem = (
-        "ekyt"
-        + f"_t{args.seq_len}"
-        + f"_ds{args.ds}"
-        + f"_bc{args.batch_classes}"
-        + f"_bs{args.batch_samples}"
-        + f"_wms{round(10.0 * args.w_ms):02d}"
-        + f"_wce{round(10.0 * args.w_ce):02d}"
-        + ("_degraded" if args.degrade_precision else "_normal")
-        + f"_f{args.fold}"
-    )
-    checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + "_epoch=99.ckpt")
+    checkpoint_stem = f"ekyt_f{args.fold}"
+    checkpoint_path = Path(args.ckpt_dir) / ( f"f{args.fold}_epoch={args.epochs-1}.ckpt")
 
     downsample_factors_dict = {
         1: [],
@@ -147,6 +160,9 @@ if __name__ == "__main__":
         compute_map_at_r=args.map_at_r,
         batch_size_for_testing=test_batch_size,
         noise_sd=noise_sd,
+        num_workers=args.num_workers,
+        n_folds=args.n_folds
+
     )
 
     dataset.prepare_data()

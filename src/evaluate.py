@@ -1,4 +1,4 @@
-
+import yaml
 import argparse
 from pathlib import Path
 from typing import Sequence, Tuple
@@ -79,68 +79,95 @@ def pairwise_similarities(
 
 
 parser = argparse.ArgumentParser()
+
+parser.add_argument("--config", default="./configs/default.yaml", type=str, help="Path to the YAML file containing default values")
+
+
 parser.add_argument(
     "--model",
-    default="ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal",
+    default="ekyt",
     type=str,
     help=(
         "The common part of the embedding filenames"
         + " (i.e., the name of the model without the fold)"
     ),
 )
+
+
 parser.add_argument(
     "--embed_dir",
-    default="./embeddings",
+    default=None,
     type=str,
     help="Directory where embedding files are stored",
 )
 parser.add_argument(
     "--plot_dir",
-    default="./figures",
+    default=None,
     type=str,
     help="Directory to store plotted figures",
 )
 parser.add_argument(
     "--n_seq",
-    default=1,
+    default=None,
     type=int,
     help="How many subsequence embeddings to use for centroid embeddings",
 )
 parser.add_argument(
     "--round",
-    default=1,
+    default=None,
     type=int,
     choices=[1, 2, 3, 4, 5, 6, 7, 8, 9],
     help="The recording round to use for authentication",
 )
 parser.add_argument(
     "--task",
-    default="TEX",
+    default=None,
     type=str,
     choices=list(TASK_TO_NUM.keys()),
     help="The task to use for enrollment and authentication",
 )
 parser.add_argument(
     "--bootstrap",
+    default=None,
     action="store_true",
     help="Flag indicating to compute results involving bootstrapping",
 )
 parser.add_argument(
     "--judo",
+    default=None,
     action="store_true",
     help="Flag indicating to compute results involving JuDo1000",
 )
 parser.add_argument(
     "--val",
+    default=None,
     action="store_true",
     help="Flag indicating to compute results involving the validation set",
 )
 parser.add_argument(
     "--plot",
+    default=None,
     action="store_true",
     help="Flag indicating to plot figures",
 )
+# Parse CLI arguments
 args = parser.parse_args()
+
+# Load defaults from YAML configuration
+with open(args.config, 'r') as f:
+    defaults = yaml.safe_load(f)
+
+args_dict = vars(args)
+for key, value in defaults.items():
+    if key in args_dict:
+        if args_dict[key] is None:
+            args_dict[key] = value
+    else:
+        args_dict[key] = value
+
+
+# You can now access the updated arguments
+print(args_dict)
 
 model_name = args.model
 embed_dir = Path(args.embed_dir)
@@ -155,7 +182,7 @@ skip_plot = not args.plot
 
 print("Using model:", model_name)
 
-fold_names = [model_name + f"_f{fold}.csv" for fold in range(4)]
+fold_names = [model_name + f"_f{fold}.csv" for fold in range(args.n_folds)]
 #fold_names = [model_name + ".csv"]
 files_dict = {
     k: [embed_dir / "_".join([k, name]) for name in fold_names]

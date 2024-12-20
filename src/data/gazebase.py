@@ -1,3 +1,4 @@
+import os
 import pickle
 import re
 import shutil
@@ -37,6 +38,8 @@ class GazeBase():
         compute_map_at_r: bool = False,
         batch_size_for_testing: Optional[int] = None,
         noise_sd: Optional[float] = None,
+        num_workers: int = 1,
+        n_folds: int = 4,
     ):
         super().__init__()
 
@@ -44,6 +47,8 @@ class GazeBase():
         self.downsample_factors = downsample_factors
         self.total_downsample_factor = np.prod(self.downsample_factors)
         self.noise_sd = noise_sd
+        self.num_workers= num_workers
+        self.n_folds = n_folds
 
         self.subsequence_length = int(
             subsequence_length_before_downsampling
@@ -59,13 +64,12 @@ class GazeBase():
             self.base_dir
             / "processed"
             / (
-                f"gazebase_savgol_ds{int(self.total_downsample_factor)}"
+                f"gazebase_savgol_ds{int(self.total_downsample_factor)}_n{self.n_folds}"
                 + f"_{'normal' if self.noise_sd is None else 'degraded'}.pkl"
             )
         )
 
         self.current_fold = current_fold
-        self.n_folds = 4
         self.nb_round_for_test_subjects = 6
 
         self.classes_per_batch = classes_per_batch
@@ -82,6 +86,9 @@ class GazeBase():
         self.n_classes: int
         self.zscore_mn: float
         self.zscore_sd: float
+        
+
+        assert self.current_fold < self.n_folds, f"Current fold out of range. Must be below {self.n_folds}"
 
     def prepare_data(self) -> None:
         if not self.processed_path.exists():
@@ -96,7 +103,11 @@ class GazeBase():
         fold_label = f"fold{self.current_fold}"
         with open(self.processed_path, "rb") as f:
             data_dict = pickle.load(f)
-
+            
+        print(fold_label)
+            
+        print([(split, v) for split, v in data_dict.items() if split not in (fold_label, "test")])
+                                    
         train_y = pd.concat(
             [
                 v["labels"]
@@ -132,7 +143,7 @@ class GazeBase():
             train_set,
             batch_size=batch_size,
             sampler=train_sampler,
-            num_workers=0,
+            num_workers=self.num_workers,
         )
 
         # We want multiple "validation sets" for different purposes:
@@ -173,7 +184,7 @@ class GazeBase():
             batch_size=batch_size,
             shuffle=False,
             sampler=full_val_sampler,
-            num_workers=0,
+            num_workers=self.num_workers,
         )
         self.val_loaders.append(full_val_loader)
 
@@ -193,7 +204,7 @@ class GazeBase():
                 val_tex_set,
                 batch_size=batch_size,
                 shuffle=False,
-                num_workers=0,
+                num_workers=self.num_workers,
             )
             self.val_loaders.append(val_tex_loader)
 
@@ -210,7 +221,7 @@ class GazeBase():
                 train_tex_set,
                 batch_size=batch_size,
                 shuffle=False,
-                num_workers=0,
+                num_workers=self.num_workers,
             )
             self.val_loaders.append(train_tex_loader)
 
@@ -228,7 +239,7 @@ class GazeBase():
                 test_set,
                 batch_size=batch_size,
                 shuffle=False,
-                num_workers=0,
+                num_workers=self.num_workers,
             )
             self.test_loaders.append(test_loader)
             self.test_loaders.append(full_val_loader)
@@ -286,6 +297,19 @@ class GazeBase():
         labels = []
         print("Processing all recordings")
         for path in tqdm(recording_paths):
+            pattern_match = re.match(filename_pattern, path.stem)
+            match_groups = pattern_match.groups()
+            label = {
+                "nb_round": match_groups[0],
+                "nb_subject": match_groups[1],
+                "nb_session": match_groups[2],
+                "task": match_groups[3],
+            }
+            labels.append(label)
+            
+            if os.path.exists(self.processed_dir / f"{match_groups[0]}_{match_groups[1]}_{match_groups[2]}_{match_groups[3]}.npy"): 
+                continue
+
             df = pd.read_csv(path)
             gaze, ideal_sampling_rate = downsample_recording(
                 df, self.downsample_factors, self.initial_sampling_rate_hz
@@ -296,18 +320,6 @@ class GazeBase():
             vel = savgol_filter(gaze, 7, 2, deriv=1, axis=0, mode="nearest")
             vel *= ideal_sampling_rate  # deg/sec
 
-
-            pattern_match = re.match(filename_pattern, path.stem)
-            match_groups = pattern_match.groups()
-            label = {
-                "nb_round": match_groups[0],
-                "nb_subject": match_groups[1],
-                "nb_session": match_groups[2],
-                "task": match_groups[3],
-            }
-            labels.append(label)
-
-            # CHANGE
             np.save(self.processed_dir / f"{match_groups[0]}_{match_groups[1]}_{match_groups[2]}_{match_groups[3]}.npy", vel.astype(np.float32))
 
         labels_df = pd.DataFrame(labels)
