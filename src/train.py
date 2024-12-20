@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import torch
 import tqdm
+import yaml
 
 from data.gazebase import GazeBase
 from models.modules import EyeKnowYouToo
@@ -88,6 +89,7 @@ parser.add_argument(
     type=str,
     help="Path to directory to store embeddings",
 )
+
 args = parser.parse_args()
 
 
@@ -218,5 +220,7 @@ if __name__ == "__main__":
                 pbar.set_description(f"Epoch {epoch+1}, Validation Loss: {sum(valid_loss)/len(valid_loss):.6f},  ")
         
 
-
-        torch.save(model.state_dict(), checkpoint_path.with_name(checkpoint_stem + f"_epoch={epoch}.ckpt"))
+        try:
+            torch.save(model.state_dict(), checkpoint_path.with_name(checkpoint_stem + f"_epoch={epoch}.ckpt"))
+        except:
+            print("This stupid errpr happened again - cant save the model")
