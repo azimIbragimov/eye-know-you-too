@@ -222,7 +222,7 @@ class GazeBase():
                 self.subsequence_length,
                 mn=self.zscore_mn,
                 sd=self.zscore_sd,
-                processed_path=self.base_processed_dirdir
+                processed_path=self.processed_dir
             )
             test_loader = DataLoader(
                 test_set,
