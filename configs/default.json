@@ -1,0 +1,5 @@
+{
+    "gazebase_dir": "./data",
+    "processed_dir": "./data/processed",
+    "raw_dir": "./data/raw"
+}
