@@ -29,4 +29,4 @@ embed_dir: "./embeddings"
 model_name: "ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal"
 plot_dir: "./figures"
 
-model_file: "models.modules"
+model_file: "models.eyeknowyoutoo"

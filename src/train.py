@@ -137,7 +137,6 @@ if __name__ == "__main__":
     if args.degrade_precision:
         noise_sd = 0.5
 
-
     dataset = Dataset(
         current_fold=args.fold,
         base_dir=args.dataset_dir,
