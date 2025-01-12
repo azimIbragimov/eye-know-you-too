@@ -6,6 +6,7 @@ import tqdm
 import yaml
 import importlib
 
+
 config_parser = argparse.ArgumentParser(add_help=False)
 
 config_parser.add_argument(
@@ -138,6 +139,7 @@ if __name__ == "__main__":
         + ("_degraded" if args.degrade_precision else "_normal")
         + f"_f{args.fold}"
     )
+    
     checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + ".ckpt")
     print(checkpoint_path)
 
@@ -247,6 +249,4 @@ if __name__ == "__main__":
 
                 pbar.set_description(f"Epoch {epoch+1}, Validation Loss: {sum(valid_loss)/len(valid_loss):.6f},  ")
         
-
-
         torch.save(model.state_dict(), checkpoint_path.with_name(checkpoint_stem + f"_epoch={epoch}.ckpt"))
