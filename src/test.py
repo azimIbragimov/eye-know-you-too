@@ -129,7 +129,6 @@ args = parser.parse_args()
 
 if __name__ == "__main__": 
 
-    # Hide all GPUs except the one we (maybe) want to use
     device = args.device
     
     checkpoint_stem = (
@@ -143,7 +142,7 @@ if __name__ == "__main__":
         + ("_degraded" if args.degrade_precision else "_normal")
         + f"_f{args.fold}"
     )
-    checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + "_epoch=99.ckpt")
+    checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + f"_epoch={model_config['epochs']-1}.ckpt")
 
     downsample_factors_dict = {
         1: [],
@@ -170,8 +169,8 @@ if __name__ == "__main__":
         base_dir=args.gazebase_dir,
         downsample_factors=downsample_factors,
         subsequence_length_before_downsampling=args.seq_len,
-        classes_per_batch=16,
-        samples_per_class=16,
+        classes_per_batch=model_config["batch_classes"],
+        samples_per_class=model_config["batch_samples"],
         compute_map_at_r=args.map_at_r,
         batch_size_for_testing=test_batch_size,
         noise_sd=noise_sd,

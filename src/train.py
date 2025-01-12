@@ -192,7 +192,7 @@ if __name__ == "__main__":
     sched = torch.optim.lr_scheduler.OneCycleLR(
             optimizer=opt,
             max_lr=0.01,
-            epochs=100,
+            epochs=model_config["epochs"],
             steps_per_epoch=1,
             cycle_momentum=False,
             div_factor=100.0,
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     print(validation_loader)
     size = len(train_loader.dataset) + len(validation_loader[0].dataset)
 
-    for epoch in range(100):
+    for epoch in range(model_config["epochs"]):
         model.train()
         with tqdm.tqdm(total=size, desc="") as pbar:
             for batch, (inputs, metadata) in enumerate(train_loader):

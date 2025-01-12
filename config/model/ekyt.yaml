@@ -12,6 +12,7 @@ degrade_precision: False
 seq_len: 5000
 map_at_r: False
 batch_size_for_testing: 256
+epochs: 100
 
 
 # Eval
