@@ -13,3 +13,4 @@ def get_downsample_factors_dict():
             20: [4, 5],
             32: [8, 4],
         }
+    return downsample_factors_dict

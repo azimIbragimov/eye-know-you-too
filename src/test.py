@@ -142,7 +142,10 @@ if __name__ == "__main__":
     
     checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + f"_epoch={model_config['epochs']-1}.ckpt")
     downsample_factors = get_downsample_factors_dict()[args.ds]
-    noise_sd = None if args.degrade_precision else noise_sd = 0.5
+    noise_sd = None 
+    if args.degrade_precision:
+        noise_sd = 0.5
+    
     test_batch_size = args.batch_size_for_testing
 
     dataset = Dataset(
