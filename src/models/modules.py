@@ -9,7 +9,8 @@ from pytorch_metric_learning.utils import accuracy_calculator
 
 from .networks import Classifier, SimpleDenseNet
 
-class EyeKnowYouToo(torch.nn.Module):
+# EyeKnowYouToo
+class Model(torch.nn.Module):
     def __init__(
         self,
         n_classes: int,

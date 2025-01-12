@@ -5,10 +5,7 @@ import torch
 import tqdm
 import pandas as pd
 import yaml
-
-
-from data.gazebase import GazeBase
-from models.modules import EyeKnowYouToo
+import importlib
 
 
 config_parser = argparse.ArgumentParser(add_help=False)
@@ -55,8 +52,8 @@ parser.add_argument(
     "--w_ce", default=model_config["w_ce"], type=float, help="Weight for cross-entropy loss"
 )
 parser.add_argument(
-    "--gazebase_dir",
-    default=dataset_config["gazebase_dir"],
+    "--dataset_dir",
+    default=dataset_config["dataset_dir"],
     type=str,
     help="Path to directory to store GazeBase data files",
 )
@@ -128,9 +125,15 @@ parser.add_argument(
 args = parser.parse_args()
 
 if __name__ == "__main__": 
+    
 
     device = args.device
+    module = importlib.import_module(dataset_config["dataset_file"])
+    Dataset = getattr(module, "Dataset")
     
+    module = importlib.import_module(model_config["model_file"])
+    Model = getattr(module, "Model")
+
     checkpoint_stem = (
         "ekyt"
         + f"_t{args.seq_len}"
@@ -164,9 +167,9 @@ if __name__ == "__main__":
     if test_batch_size == -1:
         test_batch_size = None
 
-    dataset = GazeBase(
+    dataset = Dataset(
         current_fold=args.fold,
-        base_dir=args.gazebase_dir,
+        base_dir=args.dataset_dir,
         downsample_factors=downsample_factors,
         subsequence_length_before_downsampling=args.seq_len,
         classes_per_batch=model_config["batch_classes"],
@@ -181,7 +184,7 @@ if __name__ == "__main__":
     print("Test set mean:", dataset.zscore_mn)
     print("Test set SD:", dataset.zscore_sd)
 
-    model = EyeKnowYouToo(
+    model = Model(
         n_classes=dataset.n_classes,
         embeddings_filename=checkpoint_stem + ".csv",
         embeddings_dir=args.embed_dir,

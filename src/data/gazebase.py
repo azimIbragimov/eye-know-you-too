@@ -25,7 +25,7 @@ GAZEBASE_URL = "https://ndownloader.figshare.com/files/27039812"
 JUDO1000_URL = "https://osf.io/4wy7s/download"
 
 
-class GazeBase():
+class Dataset():
     def __init__(
         self,
         current_fold: int = 0,
@@ -62,7 +62,7 @@ class GazeBase():
                 + f"_{'normal' if self.noise_sd is None else 'degraded'}.pkl"
             )
         )
-
+                
         self.current_fold = current_fold
         self.n_folds = 4
         self.nb_round_for_test_subjects = 6
@@ -372,5 +372,3 @@ class GazeBase():
         with open(self.processed_path, "wb") as f:
             pickle.dump(data_dict, f)
         print(f"Finished processing data. Saved to '{self.processed_path}'.")
-
-

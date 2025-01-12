@@ -1,1 +1,3 @@
-gazebase_dir: "./data"
+dataset_dir: "./data"
+dataset_file: "data.gazebase"
+
