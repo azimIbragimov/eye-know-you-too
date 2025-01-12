@@ -1,22 +1,30 @@
+# Fold information
 fold: 0
-map_at_r: False
+
+# Training/Testing details
 w_ms: 1.0
 w_ce: 0.1
-log_dir: "./logs"
-ckpt_dir: "./output"
-seq_len: 5000
 batch_classes: 16
 batch_samples: 16
 ds: 1
 device: "cuda"
 degrade_precision: False
-embed_dir: "./embeddings"
+seq_len: 5000
+map_at_r: False
 batch_size_for_testing: 256
-model_name: "ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal"
-plot_dir: "./figures"
+
+
+# Eval
 n_seq: 1
 round: 1
 task: "TEX"
 bootstrap: False
 val: False
 plot: False
+
+#Dirs
+log_dir: "./logs"
+ckpt_dir: "./output"
+embed_dir: "./embeddings"
+model_name: "ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal"
+plot_dir: "./figures"
