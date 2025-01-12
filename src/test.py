@@ -7,6 +7,8 @@ import pandas as pd
 import yaml
 import importlib
 
+from utility.utility import get_downsample_factors_dict
+
 
 config_parser = argparse.ArgumentParser(add_help=False)
 
@@ -126,7 +128,6 @@ args = parser.parse_args()
 
 if __name__ == "__main__": 
     
-
     device = args.device
     module = importlib.import_module(dataset_config["dataset_file"])
     Dataset = getattr(module, "Dataset")
@@ -135,37 +136,14 @@ if __name__ == "__main__":
     Model = getattr(module, "Model")
 
     checkpoint_stem = (
-        "ekyt"
-        + f"_t{args.seq_len}"
-        + f"_ds{args.ds}"
-        + f"_bc{args.batch_classes}"
-        + f"_bs{args.batch_samples}"
-        + f"_wms{round(10.0 * args.w_ms):02d}"
-        + f"_wce{round(10.0 * args.w_ce):02d}"
-        + ("_degraded" if args.degrade_precision else "_normal")
+        model_config["model_name"] 
         + f"_f{args.fold}"
     )
+    
     checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + f"_epoch={model_config['epochs']-1}.ckpt")
-
-    downsample_factors_dict = {
-        1: [],
-        2: [2],
-        4: [4],
-        8: [8],
-        20: [4, 5],
-        32: [8, 4],
-    }
-    downsample_factors = downsample_factors_dict[args.ds]
-
-
-    noise_sd = None
-    if args.degrade_precision:
-        noise_sd = 0.5
-
-
+    downsample_factors = get_downsample_factors_dict()[args.ds]
+    noise_sd = None if args.degrade_precision else noise_sd = 0.5
     test_batch_size = args.batch_size_for_testing
-    if test_batch_size == -1:
-        test_batch_size = None
 
     dataset = Dataset(
         current_fold=args.fold,
@@ -194,10 +172,7 @@ if __name__ == "__main__":
     ).to(device)
 
     model.load_state_dict(torch.load(checkpoint_path))
-
-
     test_loader, full_val_loader = dataset.test_dataloader()
-
 
     # testing 
     model.eval()
@@ -217,10 +192,6 @@ if __name__ == "__main__":
 
         embeddings = torch.cat(embeddings, dim=0).numpy()
         metadata = torch.cat(metadata, dim=0).numpy()
-
-        print(embeddings)
-        print(metadata)
-        print(embeddings.shape, metadata.shape)
 
         embed_dim = embeddings.shape[1]
         embedding_dict = {
@@ -273,10 +244,6 @@ if __name__ == "__main__":
 
         embeddings = torch.cat(embeddings, dim=0).numpy()
         metadata = torch.cat(metadata, dim=0).numpy()
-
-        print(embeddings)
-        print(metadata)
-        print(embeddings.shape, metadata.shape)
 
         embed_dim = embeddings.shape[1]
         embedding_dict = {

@@ -14,7 +14,6 @@ map_at_r: False
 batch_size_for_testing: 256
 epochs: 100
 
-
 # Eval
 n_seq: 1
 round: 1

@@ -1,33 +1,27 @@
 import argparse
+import importlib
 import os
 from pathlib import Path
+
 import torch
 import tqdm
-import yaml
-import importlib
+
+from utility.utility import load_config
+from utility.utility import get_downsample_factors_dict
 
 
 config_parser = argparse.ArgumentParser(add_help=False)
-
 config_parser.add_argument(
-    "--config",
-    default="config/lohr-22.yaml",
+    "--config", 
+    default="config/lohr-22.yaml", 
     type=str,
-    help="Config file for the current experiment",
+    help="Config file for the current experiment"
 )
 args, remaining_args = config_parser.parse_known_args()
 
-with open(args.config) as file:
-    config = yaml.safe_load(file)
-print(config)
-
-with open(config["model_config"]) as file:
-    model_config = yaml.safe_load(file)
-print(model_config)
-
-with open(config["dataset_config"]) as file:
-    dataset_config = yaml.safe_load(file)
-print(dataset_config)
+config = load_config(args.config)
+model_config = load_config(config["model_config"])
+dataset_config = load_config(config["dataset_config"])
 
 parser = argparse.ArgumentParser(parents=[config_parser])
 
@@ -45,10 +39,16 @@ parser.add_argument(
     default=model_config["map_at_r"]
 )
 parser.add_argument(
-    "--w_ms", default=model_config["w_ms"], type=float, help="Weight for multi-similarity loss"
+    "--w_ms", 
+    default=model_config["w_ms"], 
+    type=float, 
+    help="Weight for multi-similarity loss"
 )
 parser.add_argument(
-    "--w_ce", default=model_config["w_ce"], type=float, help="Weight for cross-entropy loss"
+    "--w_ce", 
+    default=model_config["w_ce"], 
+    type=float, 
+    help="Weight for cross-entropy loss"
 )
 parser.add_argument(
     "--dataset_dir",
@@ -68,7 +68,6 @@ parser.add_argument(
     type=str,
     help="Path to directory to store model checkpoints",
 )
-
 parser.add_argument(
     "--seq_len",
     default=model_config["seq_len"],
@@ -100,14 +99,12 @@ parser.add_argument(
     help="Flag indicating to use the CPU instead of a GPU",
     default=model_config["device"]
 )
-
 parser.add_argument(
     "--degrade_precision",
     action="store_true",
     help="Flag indicating to degrade spatial precision by adding white noise with SD=0.5 deg",
     default=model_config["degrade_precision"]
 )
-
 parser.add_argument(
     "--embed_dir",
     default=model_config["embed_dir"],
@@ -117,10 +114,8 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-
 if __name__ == "__main__": 
     
-    # Hide all GPUs except the one we (maybe) want to use
     device = args.device
     module = importlib.import_module(dataset_config["dataset_file"])
     Dataset = getattr(module, "Dataset")
@@ -129,29 +124,13 @@ if __name__ == "__main__":
     Model = getattr(module, "Model")
 
     checkpoint_stem = (
-        "ekyt"
-        + f"_t{args.seq_len}"
-        + f"_ds{args.ds}"
-        + f"_bc{args.batch_classes}"
-        + f"_bs{args.batch_samples}"
-        + f"_wms{round(10.0 * args.w_ms):02d}"
-        + f"_wce{round(10.0 * args.w_ce):02d}"
-        + ("_degraded" if args.degrade_precision else "_normal")
+        model_config["model_name"] 
         + f"_f{args.fold}"
     )
     
     checkpoint_path = Path(args.ckpt_dir) / (checkpoint_stem + ".ckpt")
-    print(checkpoint_path)
-
-    downsample_factors_dict = {
-        1: [],
-        2: [2],
-        4: [4],
-        8: [8],
-        20: [4, 5],
-        32: [8, 4],
-    }
-    downsample_factors = downsample_factors_dict[args.ds]
+    
+    downsample_factors = get_downsample_factors_dict()[args.ds]
 
 
     noise_sd = None
@@ -170,7 +149,6 @@ if __name__ == "__main__":
         batch_size_for_testing=None,
         noise_sd=noise_sd
     )
-
 
     dataset.prepare_data()
     dataset.setup(stage="fit")
@@ -202,7 +180,6 @@ if __name__ == "__main__":
    )
 
     # training
-    print(validation_loader)
     size = len(train_loader.dataset) + len(validation_loader[0].dataset)
 
     for epoch in range(model_config["epochs"]):
