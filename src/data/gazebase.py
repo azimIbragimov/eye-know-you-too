@@ -17,6 +17,7 @@ from .datasets import SubsequenceDataset
 from .download import download
 from .downsample import downsample_recording
 from .zip import extract
+from .base_dataset import BaseDataset
 
 # https://figshare.com/articles/dataset/GazeBase_Data_Repository/12912257/3
 GAZEBASE_URL = "https://ndownloader.figshare.com/files/27039812"
@@ -25,7 +26,7 @@ GAZEBASE_URL = "https://ndownloader.figshare.com/files/27039812"
 JUDO1000_URL = "https://osf.io/4wy7s/download"
 
 
-class Dataset():
+class Dataset(BaseDataset):
     def __init__(
         self,
         current_fold: int = 0,
