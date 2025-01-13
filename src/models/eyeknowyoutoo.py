@@ -8,8 +8,9 @@ from pytorch_metric_learning import losses, miners
 from pytorch_metric_learning.utils import accuracy_calculator
 
 from .networks import Classifier, SimpleDenseNet
+from .base_model import BaseModel
 
-class EyeKnowYouToo(torch.nn.Module):
+class Model(BaseModel):
     def __init__(
         self,
         n_classes: int,

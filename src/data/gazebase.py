@@ -17,6 +17,7 @@ from .datasets import SubsequenceDataset
 from .download import download
 from .downsample import downsample_recording
 from .zip import extract
+from .base_dataset import BaseDataset
 
 # https://figshare.com/articles/dataset/GazeBase_Data_Repository/12912257/3
 GAZEBASE_URL = "https://ndownloader.figshare.com/files/27039812"
@@ -25,7 +26,7 @@ GAZEBASE_URL = "https://ndownloader.figshare.com/files/27039812"
 JUDO1000_URL = "https://osf.io/4wy7s/download"
 
 
-class GazeBase():
+class Dataset(BaseDataset):
     def __init__(
         self,
         current_fold: int = 0,
@@ -44,6 +45,16 @@ class GazeBase():
         self.downsample_factors = downsample_factors
         self.total_downsample_factor = np.prod(self.downsample_factors)
         self.noise_sd = noise_sd
+        
+        self.TASK_TO_NUM = {
+            "HSS": 0,
+            "RAN": 1,
+            "TEX": 2,
+            "FXS": 3,
+            "VD1": 4,
+            "VD2": 5,
+            "BLG": 6,
+        }
 
         self.subsequence_length = int(
             subsequence_length_before_downsampling
@@ -62,7 +73,7 @@ class GazeBase():
                 + f"_{'normal' if self.noise_sd is None else 'degraded'}.pkl"
             )
         )
-
+                
         self.current_fold = current_fold
         self.n_folds = 4
         self.nb_round_for_test_subjects = 6
@@ -120,7 +131,7 @@ class GazeBase():
         train_y = train_y.loc[~is_train_blg, :]
 
         train_set = SubsequenceDataset(
-            train_X, train_y, self.subsequence_length, mn=None, sd=None
+            train_X, train_y, self.subsequence_length, self.TASK_TO_NUM, mn=None, sd=None
         )
         self.zscore_mn = train_set.mn
         self.zscore_sd = train_set.sd
@@ -158,6 +169,7 @@ class GazeBase():
             val_X,
             val_y,
             self.subsequence_length,
+            self.TASK_TO_NUM,
             mn=self.zscore_mn,
             sd=self.zscore_sd,
         )
@@ -189,6 +201,7 @@ class GazeBase():
                 val_tex_X,
                 val_tex_y,
                 self.subsequence_length,
+                self.TASK_TO_NUM,
                 mn=self.zscore_mn,
                 sd=self.zscore_sd,
             )
@@ -209,6 +222,7 @@ class GazeBase():
                 train_tex_X,
                 train_tex_y,
                 self.subsequence_length,
+                self.TASK_TO_NUM,
                 mn=self.zscore_mn,
                 sd=self.zscore_sd,
             )
@@ -228,6 +242,7 @@ class GazeBase():
                 test_X,
                 test_y,
                 self.subsequence_length,
+                self.TASK_TO_NUM,
                 mn=self.zscore_mn,
                 sd=self.zscore_sd,
             )
@@ -372,5 +387,3 @@ class GazeBase():
         with open(self.processed_path, "wb") as f:
             pickle.dump(data_dict, f)
         print(f"Finished processing data. Saved to '{self.processed_path}'.")
-
-

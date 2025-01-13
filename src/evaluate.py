@@ -2,6 +2,7 @@
 import argparse
 from pathlib import Path
 from typing import Sequence, Tuple
+import yaml
 
 import numpy as np
 import pandas as pd
@@ -78,7 +79,30 @@ def pairwise_similarities(
     return similarities, genuine
 
 
-parser = argparse.ArgumentParser()
+config_parser = argparse.ArgumentParser(add_help=False)
+
+config_parser.add_argument(
+    "--config",
+    default="config/lohr-22.yaml",
+    type=str,
+    help="Config file for the current experiment",
+)
+args, remaining_args = config_parser.parse_known_args()
+
+with open(args.config) as file:
+    config = yaml.safe_load(file)
+print(config)
+
+with open(config["model_config"]) as file:
+    model_config = yaml.safe_load(file)
+print(model_config)
+
+with open(config["dataset_config"]) as file:
+    dataset_config = yaml.safe_load(file)
+print(dataset_config)
+
+parser = argparse.ArgumentParser(parents=[config_parser])
+
 parser.add_argument(
     "--model",
     default="ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal",
@@ -90,38 +114,40 @@ parser.add_argument(
 )
 parser.add_argument(
     "--embed_dir",
-    default="./embeddings",
+    default=model_config["embed_dir"],
     type=str,
-    help="Directory where embedding files are stored",
+    help="Path to directory to store embeddings"
 )
+
 parser.add_argument(
     "--plot_dir",
-    default="./figures",
+    default=model_config["plot_dir"],
     type=str,
     help="Directory to store plotted figures",
 )
 parser.add_argument(
     "--n_seq",
-    default=1,
+    default=model_config["n_seq"],
     type=int,
     help="How many subsequence embeddings to use for centroid embeddings",
 )
 parser.add_argument(
     "--round",
-    default=1,
+    default=model_config["round"],
     type=int,
     choices=[1, 2, 3, 4, 5, 6, 7, 8, 9],
     help="The recording round to use for authentication",
 )
 parser.add_argument(
     "--task",
-    default="TEX",
+    default=model_config["task"],
     type=str,
     choices=list(TASK_TO_NUM.keys()),
     help="The task to use for enrollment and authentication",
 )
 parser.add_argument(
     "--bootstrap",
+    default=model_config["bootstrap"],
     action="store_true",
     help="Flag indicating to compute results involving bootstrapping",
 )
@@ -132,14 +158,18 @@ parser.add_argument(
 )
 parser.add_argument(
     "--val",
+    default=model_config["val"],
     action="store_true",
     help="Flag indicating to compute results involving the validation set",
 )
 parser.add_argument(
     "--plot",
+    default=model_config["plot"],
     action="store_true",
     help="Flag indicating to plot figures",
 )
+
+
 args = parser.parse_args()
 
 model_name = args.model

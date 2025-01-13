@@ -12,23 +12,13 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
-TASK_TO_NUM = {
-    "HSS": 0,
-    "RAN": 1,
-    "TEX": 2,
-    "FXS": 3,
-    "VD1": 4,
-    "VD2": 5,
-    "BLG": 6,
-}
-
-
 class SubsequenceDataset(Dataset):
     def __init__(
         self,
         sequences: List[np.ndarray],
         labels: pd.DataFrame,
         subsequence_length: int,
+        TASK_TO_NUM: dict,
         mn: Optional[float] = None,
         sd: Optional[float] = None,
     ):
