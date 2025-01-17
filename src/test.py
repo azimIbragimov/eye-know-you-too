@@ -6,6 +6,11 @@ import tqdm
 import pandas as pd
 import yaml
 import importlib
+import torch.distributed as dist
+import torch.nn as nn
+import torch.optim as optim
+from torch.nn.parallel import DistributedDataParallel as DDP
+
 
 from utility.utility import get_downsample_factors_dict
 
@@ -165,6 +170,14 @@ if __name__ == "__main__":
     print("Test set mean:", dataset.zscore_mn)
     print("Test set SD:", dataset.zscore_sd)
 
+    test_loader, full_val_loader = dataset.test_dataloader()
+    
+    torch.cuda.set_device(int(os.environ["LOCAL_RANK"]))
+    dist.init_process_group("nccl")
+    rank = dist.get_rank()
+    print(f"Start running basic DDP example on rank {rank}.")
+    device_id = rank % torch.cuda.device_count()
+    
     model = Model(
         n_classes=dataset.n_classes,
         embeddings_filename=checkpoint_stem + ".csv",
@@ -173,9 +186,10 @@ if __name__ == "__main__":
         w_class_loss=args.w_ce,
         compute_map_at_r=args.map_at_r,
     ).to(device)
+    
+    model = DDP(model, device_ids=[device_id])
+    model.load_state_dict(torch.load(checkpoint_path, map_location=args.device))
 
-    model.load_state_dict(torch.load(checkpoint_path))
-    test_loader, full_val_loader = dataset.test_dataloader()
 
     # testing 
     model.eval()
@@ -185,7 +199,7 @@ if __name__ == "__main__":
         with tqdm.tqdm(total=len(test_loader.dataset), desc="") as pbar:
             for batch, (x, y) in enumerate(test_loader):
                 x, y = x.to(device), y.to(device)
-                pred = model.embedder(x)
+                pred = model.module.embedder(x)
                 pred, x, y = pred.detach().cpu(), x.detach().cpu(), y.detach().cpu()
                 embeddings.append(pred)
                 metadata.append(y)
@@ -222,8 +236,8 @@ if __name__ == "__main__":
             axis=0,
             ascending=True,
         )
-        path = model.embeddings_path.with_name(
-            "test"  + "_" + model.embeddings_path.name
+        path = model.module.embeddings_path.with_name(
+            "test"  + "_" + model.module.embeddings_path.name
         )
         path.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(path, index=False)
@@ -237,7 +251,7 @@ if __name__ == "__main__":
         with tqdm.tqdm(total=len(full_val_loader.dataset), desc="") as pbar:
             for batch, (x, y) in enumerate(full_val_loader):
                 x, y = x.to(device), y.to(device)
-                pred = model.embedder(x)
+                pred = model.module.embedder(x)
                 pred, x, y = pred.detach().cpu(), x.detach().cpu(), y.detach().cpu()
                 embeddings.append(pred)
                 metadata.append(y)
@@ -274,8 +288,8 @@ if __name__ == "__main__":
             axis=0,
             ascending=True,
         )
-        path = model.embeddings_path.with_name(
-            "val"  + "_" + model.embeddings_path.name
+        path = model.module.embeddings_path.with_name(
+            "val"  + "_" + model.module.embeddings_path.name
         )
         path.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(path, index=False)
