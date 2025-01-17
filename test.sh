@@ -1,4 +1,4 @@
-python src/test.py --ds=1 --fold=0
-python src/test.py --ds=1 --fold=1
-python src/test.py --ds=1 --fold=2
-python src/test.py --ds=1 --fold=3
+torchrun --nnodes=1 --nproc_per_node=2 src/test.py --config=./config/lohr-22.yaml --fold=0
+torchrun --nnodes=1 --nproc_per_node=2 src/test.py --config=./config/lohr-22.yaml --fold=1
+torchrun --nnodes=1 --nproc_per_node=2 src/test.py --config=./config/lohr-22.yaml --fold=2
+torchrun --nnodes=1 --nproc_per_node=2 src/test.py --config=./config/lohr-22.yaml --fold=3
