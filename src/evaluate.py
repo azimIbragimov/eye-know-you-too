@@ -3,14 +3,14 @@ import argparse
 from pathlib import Path
 from typing import Sequence, Tuple
 import yaml
+import importlib
+
 
 import numpy as np
 import pandas as pd
 
-from data.datasets import TASK_TO_NUM
 from metrics import dprime, roc
 
-NUM_TO_TASK = {v: k for k, v in TASK_TO_NUM.items()}
 
 
 def concatenate_embeddings(df_list: Sequence[pd.DataFrame]) -> pd.DataFrame:
@@ -101,6 +101,13 @@ with open(config["dataset_config"]) as file:
     dataset_config = yaml.safe_load(file)
 print(dataset_config)
 
+
+module = importlib.import_module(dataset_config["dataset_file"])
+Dataset = getattr(module, "Dataset")()
+TASK_TO_NUM = Dataset.TASK_TO_NUM
+NUM_TO_TASK = {v: k for k, v in TASK_TO_NUM.items()}
+
+
 parser = argparse.ArgumentParser(parents=[config_parser])
 
 parser.add_argument(
@@ -169,8 +176,8 @@ parser.add_argument(
     help="Flag indicating to plot figures",
 )
 
-
 args = parser.parse_args()
+
 
 model_name = args.model
 embed_dir = Path(args.embed_dir)

@@ -2,6 +2,11 @@ import argparse
 import importlib
 import os
 from pathlib import Path
+import torch.distributed as dist
+import torch.nn as nn
+import torch.optim as optim
+from torch.nn.parallel import DistributedDataParallel as DDP
+
 
 import torch
 import tqdm
@@ -155,8 +160,14 @@ if __name__ == "__main__":
     print("Train set SD:", dataset.zscore_sd)
 
     train_loader, validation_loader = dataset.train_dataloader(), dataset.val_dataloader()
-
-
+    
+    torch.cuda.set_device(int(os.environ["LOCAL_RANK"]))
+    dist.init_process_group("nccl")
+    rank = dist.get_rank()
+    print(f"Start running basic DDP example on rank {rank}.")
+    device_id = rank % torch.cuda.device_count()
+    
+    
     model = Model(
         n_classes=dataset.n_classes,
         embeddings_filename=checkpoint_stem + ".csv",
@@ -164,9 +175,10 @@ if __name__ == "__main__":
         w_metric_loss=args.w_ms,
         w_class_loss=args.w_ce,
         compute_map_at_r=args.map_at_r,
-    ).to(device)
-
-
+    ).to(device_id)
+    model = DDP(model, device_ids=[device_id])
+    
+    
     opt = torch.optim.Adam(model.parameters())
     sched = torch.optim.lr_scheduler.OneCycleLR(
             optimizer=opt,
@@ -188,11 +200,11 @@ if __name__ == "__main__":
                 opt.zero_grad()
 
                 inputs, metadata = inputs.to(device), metadata.to(device)
-                embeddings = model.embedder(inputs)
+                embeddings = model.module.embedder(inputs)
     
                 labels = metadata[:, 0]
-                metric_loss = model.metric_step(embeddings, labels)
-                class_loss = model.class_step(embeddings, labels)
+                metric_loss = model.module.metric_step(embeddings, labels)
+                class_loss = model.module.class_step(embeddings, labels)
                 total_loss = metric_loss + class_loss
     
                 # Backpropagation
@@ -211,11 +223,11 @@ if __name__ == "__main__":
             with torch.no_grad():
                 for batch, (inputs, metadata) in enumerate(validation_loader[0]):
                     inputs, metadata = inputs.to(device), metadata.to(device)
-                    embeddings = model.embedder(inputs)
+                    embeddings = model.module.embedder(inputs)
             
                     labels = metadata[:, 0]
-                    metric_loss = model.metric_step(embeddings, labels)
-                    class_loss = model.class_step(embeddings, labels)
+                    metric_loss = model.module.metric_step(embeddings, labels)
+                    class_loss = model.module.class_step(embeddings, labels)
                     total_loss = metric_loss + class_loss
 
                     # Update progress bar

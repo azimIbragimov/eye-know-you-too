@@ -76,6 +76,7 @@ class SubsequenceDataset(Dataset):
             x = torch.clamp(self.samples, min=-1000.0, max=1000.0).numpy()
             mn = np.nanmean(x)
             sd = np.nanstd(x)
+            
         self.mn = mn
         self.sd = sd
 
