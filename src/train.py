@@ -155,7 +155,7 @@ if __name__ == "__main__":
     )
 
     dataset.prepare_data()
-    dataset.setup(stage="fit")
+    dataset.setup(stage="fit", )
     print("Train set mean:", dataset.zscore_mn)
     print("Train set SD:", dataset.zscore_sd)
 
@@ -191,7 +191,7 @@ if __name__ == "__main__":
    )
 
     # training
-    size = len(train_loader.dataset) + len(validation_loader[0].dataset)
+    size = len(train_loader.dataset) + len(validation_loader.dataset)
 
     for epoch in range(model_config["epochs"]):
         model.train()
@@ -221,7 +221,7 @@ if __name__ == "__main__":
             valid_loss = []
             model.eval()
             with torch.no_grad():
-                for batch, (inputs, metadata) in enumerate(validation_loader[0]):
+                for batch, (inputs, metadata) in enumerate(validation_loader):
                     inputs, metadata = inputs.to(device), metadata.to(device)
                     embeddings = model.module.embedder(inputs)
             

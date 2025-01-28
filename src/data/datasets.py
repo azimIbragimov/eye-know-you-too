@@ -10,15 +10,18 @@ from typing import List, Optional, Tuple
 import numpy as np
 import pandas as pd
 import torch
+import pathlib
+import tqdm
 from torch.utils.data import Dataset
 
 class SubsequenceDataset(Dataset):
     def __init__(
         self,
-        sequences: List[np.ndarray],
-        labels: pd.DataFrame,
+        meta: pd.DataFrame,
         subsequence_length: int,
         TASK_TO_NUM: dict,
+        exclude_task: str,
+        processed_folder: str,
         mn: Optional[float] = None,
         sd: Optional[float] = None,
     ):
@@ -34,17 +37,24 @@ class SubsequenceDataset(Dataset):
                 "nb_session",
                 "nb_task",
                 "nb_subsequence",
-                "exclude",
             )
         }
-        for recording, (_, label) in zip(sequences, labels.iterrows()):
-            nb_round = int(label["nb_round"])
-            nb_subject = int(label["nb_subject"])
-            nb_session = int(label["nb_session"])
-            nb_task = TASK_TO_NUM[label["task"]]
+
+        for index, file in tqdm.tqdm(meta.iterrows(), total=meta.shape[0]):
+            path = pathlib.Path(file["filename"])
+            processed_path = processed_folder / f"{path.stem}.npy"
+            
+            nb_subject = int(file["part_id"])
+            nb_round =int(file["round"])
+            nb_session = int(file["session"])
+            nb_task  = TASK_TO_NUM[file["task"]]
+            
+            if exclude_task == nb_task:
+                continue
 
             # Extract fixed-length, non-overlapping subsequences
-            recording_tensor = torch.from_numpy(recording).float()
+            data = np.load(processed_path).T
+            recording_tensor = torch.from_numpy(data).float()
             subsequences = recording_tensor.unfold(
                 dimension=-1, size=subsequence_length, step=subsequence_length
             )
@@ -62,7 +72,6 @@ class SubsequenceDataset(Dataset):
             metadata["nb_session"].extend([nb_session] * n_seq)
             metadata["nb_task"].extend([nb_task] * n_seq)
             metadata["nb_subsequence"].extend(nb_subsequence)
-            metadata["exclude"].extend(exclude.numpy())
 
         self.samples = torch.cat(samples, dim=0)
         self.metadata = pd.DataFrame(metadata)
@@ -101,7 +110,6 @@ class SubsequenceDataset(Dataset):
                     "nb_session",
                     "nb_task",
                     "nb_subsequence",
-                    "exclude",
                 )
             ]
         )
