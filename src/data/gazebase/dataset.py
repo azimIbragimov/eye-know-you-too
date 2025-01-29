@@ -1,4 +1,5 @@
 import pickle
+import os
 import re
 import shutil
 from pathlib import Path
@@ -125,7 +126,7 @@ class Dataset(BaseDataset):
             train_set,
             batch_size=self.fit_batch_size,
             sampler=train_sampler,
-            num_workers=0,
+            num_workers=os.cpu_count(),
         )
 
         full_val_set = SubsequenceDataset(
@@ -150,7 +151,7 @@ class Dataset(BaseDataset):
             batch_size=self.fit_batch_size,
             shuffle=False,
             sampler=full_val_sampler,
-            num_workers=0,
+            num_workers=os.cpu_count(),
         )
 
         test_set = SubsequenceDataset(
@@ -167,7 +168,7 @@ class Dataset(BaseDataset):
                 test_set,
                 batch_size=self.fit_batch_size,
                 shuffle=False,
-                num_workers=0,
+                num_workers=os.cpu_count(),
             )
 
     def train_dataloader(self) -> DataLoader:
