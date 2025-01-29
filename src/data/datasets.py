@@ -27,11 +27,11 @@ class SubsequenceDataset(Dataset):
     ):
         super().__init__()
 
-        samples = []
         subjects = []
         metadata = {
             k: []
             for k in (
+                "path",
                 "nb_round",
                 "nb_subject",
                 "nb_session",
@@ -40,6 +40,9 @@ class SubsequenceDataset(Dataset):
             )
         }
 
+        n, mn_temp, std_temp = 0, 0, 0
+        
+        
         for index, file in tqdm.tqdm(meta.iterrows(), total=meta.shape[0]):
             path = pathlib.Path(file["filename"])
             processed_path = processed_folder / f"{path.stem}.npy"
@@ -59,46 +62,45 @@ class SubsequenceDataset(Dataset):
                 dimension=-1, size=subsequence_length, step=subsequence_length
             )
             subsequences = subsequences.swapdims(0, 1)  # (batch, feature, seq)
+            
+            n += 1
+            mn_temp += np.nanmean(subsequences)
+            std_temp += np.nanstd(subsequences)
 
             n_seq = subsequences.size(0)
             nb_subsequence = np.arange(n_seq)
             portion_nan = subsequences.isnan().any(dim=1).float().mean(dim=-1)
             exclude = portion_nan > 0.5
 
-            samples.append(subsequences)
             subjects.append(torch.LongTensor([nb_subject] * n_seq))
+            metadata["path"].extend([processed_path] * n_seq)
             metadata["nb_round"].extend([nb_round] * n_seq)
             metadata["nb_subject"].extend([nb_subject] * n_seq)
             metadata["nb_session"].extend([nb_session] * n_seq)
             metadata["nb_task"].extend([nb_task] * n_seq)
             metadata["nb_subsequence"].extend(nb_subsequence)
 
-        self.samples = torch.cat(samples, dim=0)
         self.metadata = pd.DataFrame(metadata)
 
         subjects = torch.cat(subjects, dim=0)
         unique_subjects = subjects.unique()
         self.classes = torch.bucketize(subjects, unique_subjects)
         self.n_classes = len(unique_subjects)
-
+        
         if mn is None or sd is None:
-            x = torch.clamp(self.samples, min=-1000.0, max=1000.0).numpy()
-            mn = np.nanmean(x)
-            sd = np.nanstd(x)
-            
-        self.mn = mn
-        self.sd = sd
+            self.mn = mn_temp / n
+            self.sd = std_temp / n
+        else:        
+            self.mn = mn
+            self.sd = sd
 
     def __len__(self) -> int:
-        return self.samples.size(0)
-
+        return self.metadata.shape[0]
+    
     def __getitem__(self, index: int) -> Tuple[torch.Tensor, torch.LongTensor]:
-        x = self.samples[index]
-        x = torch.clamp(x, min=-1000.0, max=1000.0)
-        x = (x - self.mn) / self.sd
-        x = torch.nan_to_num(x, nan=0.0)
-
+                
         y = self.metadata.iloc[index, :].to_dict()
+        path = y["path"]
         y["class"] = self.classes[index]
         y = torch.LongTensor(
             [
@@ -114,4 +116,15 @@ class SubsequenceDataset(Dataset):
             ]
         )
 
+        x = np.load(path).T
+        x = torch.from_numpy(x).float()
+        recording_tensor = x.unfold(
+                dimension=-1, size=5000, step=5000
+        )
+        x = recording_tensor.swapdims(0,1)
+        x = x[y[-1]]
+        
+        x = torch.clamp(x, min=-1000.0, max=1000.0)
+        x = (x - self.mn) / self.sd
+        x = torch.nan_to_num(x, nan=0.0)
         return x, y
