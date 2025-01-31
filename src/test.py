@@ -128,7 +128,18 @@ parser.add_argument(
     type=str,
     help="Path to directory to store embeddings"
 )
-
+parser.add_argument(
+    "--num_workers",
+    default=dataset_config["num_workers"],
+    type=str,
+    help="Number of dataloader workers"
+)
+parser.add_argument(
+    "--cache_size",
+    default=dataset_config["cache_size"],
+    type=int,
+    help="Cache size of dataloader"
+)
 args = parser.parse_args()
 
 if __name__ == "__main__": 
@@ -163,6 +174,8 @@ if __name__ == "__main__":
         compute_map_at_r=args.map_at_r,
         batch_size_for_testing=test_batch_size,
         noise_sd=noise_sd,
+        num_workers=args.num_workers,
+        cache_size=args.cache_size
     )
 
     dataset.prepare_data()
