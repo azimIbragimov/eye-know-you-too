@@ -4,6 +4,7 @@ import re
 import shutil
 from pathlib import Path
 from typing import List, Optional, Sequence
+import torch
 
 import numpy as np
 import pandas as pd
@@ -39,6 +40,8 @@ class Dataset(BaseDataset):
         compute_map_at_r: bool = False,
         batch_size_for_testing: Optional[int] = None,
         noise_sd: Optional[float] = None,
+        num_workers: int = 1,
+        cache_size: int = 8e9
     ):
         super().__init__()
 
@@ -46,6 +49,8 @@ class Dataset(BaseDataset):
         self.downsample_factors = downsample_factors
         self.total_downsample_factor = np.prod(self.downsample_factors)
         self.noise_sd = noise_sd
+        self.num_workers = num_workers
+        self.cache_size = cache_size
         
         self.TASK_TO_NUM = {
             "HSS": 0,
@@ -109,7 +114,8 @@ class Dataset(BaseDataset):
             "BLG",
             self.processed_file_dir,
             mn=None, 
-            sd=None
+            sd=None,
+            cache_size=self.cache_size
         )
         
         self.zscore_mn = train_set.mn
@@ -126,7 +132,7 @@ class Dataset(BaseDataset):
             train_set,
             batch_size=self.fit_batch_size,
             sampler=train_sampler,
-            num_workers=os.cpu_count(),
+            num_workers=self.num_workers,
         )
 
         full_val_set = SubsequenceDataset(
@@ -137,6 +143,7 @@ class Dataset(BaseDataset):
             self.processed_file_dir,
             mn=self.zscore_mn,
             sd=self.zscore_sd,
+            cache_size=self.cache_size
         )
        
         full_val_sampler = samplers.MPerClassSampler(
@@ -151,7 +158,7 @@ class Dataset(BaseDataset):
             batch_size=self.fit_batch_size,
             shuffle=False,
             sampler=full_val_sampler,
-            num_workers=os.cpu_count(),
+            num_workers=self.num_workers,
         )
 
         test_set = SubsequenceDataset(
@@ -162,13 +169,14 @@ class Dataset(BaseDataset):
                 self.processed_file_dir,
                 mn=self.zscore_mn,
                 sd=self.zscore_sd,
+                cache_size=self.cache_size
             )
         
         self.test_loader = DataLoader(
                 test_set,
                 batch_size=self.fit_batch_size,
                 shuffle=False,
-                num_workers=os.cpu_count(),
+                num_workers=self.num_workers,
             )
 
     def train_dataloader(self) -> DataLoader:

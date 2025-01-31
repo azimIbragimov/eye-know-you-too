@@ -1,3 +1,9 @@
 dataset_dir: "./data"
-dataset_file: "data.gazebase"
-
+raw_dir: "./data/raw"
+processed_dir: "./data/processed"
+dataset_file: "data.gazebase.dataset"
+downsample_factors: 1
+initial_sampling_rate_hz: 1000
+n_folds: 4
+num_workers: 1
+cache_size: 8000000000 #8GB
