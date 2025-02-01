@@ -109,36 +109,19 @@ docker run --gpus all -it eye-know-you-image
 ```
 
 ## 💿 Dataset
-We utilize the GazeBase dataset, the same one used in the original implementation. This dataset contains eye-tracking data recorded at 1000 Hz while participants engaged in various tasks such as watching videos, reading, etc. Upon initiating the training of the model, the script automatically downloads the dataset and processes it into .pkl files. The processing technique adheres to the descriptions in the referenced paper and the original implementation. It includes converting raw gaze coordinates into smoothed first derivative points using a Savitzky-Golay filter, followed by downsampling the recordings to the desired frequency. 
+We utilize the GazeBase dataset, the same one used in the original implementation. This dataset contains eye-tracking data recorded at 1000 Hz while participants engaged in various tasks such as watching videos, reading, etc. Upon initiating the training of the model, the expects processed dataset in the `data/processed` folder. The processing technique adheres to the descriptions in the referenced paper and the original implementation. It includes converting raw gaze coordinates into first derivative points using a Savitzky-Golay filter, followed by downsampling the recordings to the desired frequency. 
 
-If you wish to bypass the processing step to save time, you can download the pre-processed .pkl files from the link below:
-
-| Name | Link | 
-| -- | -- | 
-| GazeBase - 1000 HZ | https://www.dropbox.com/scl/fi/q7rn48pudd7cyp9t8950v/gazebase_savgol_ds1_normal.pkl?rlkey=o7o57856y6ozz7lh2ernwikoz&st=1nbowchk&dl=0 | 
-| GazeBase - 500 HZ | https://www.dropbox.com/scl/fi/y2c10di7313c5lb5kvhpu/gazebase_savgol_ds2_normal.pkl?rlkey=d5yoxma548kfm5iyxv5zoxc4o&st=eerp8r59&dl=0 | 
-| GazeBase - 250 HZ | https://www.dropbox.com/scl/fi/2cku2vdf3qhrnigclp0z8/gazebase_savgol_ds4_normal.pkl?rlkey=71nt2ybh4rpemmwrwsxcseysf&st=xk7ct4fm&dl=0 | 
-| GazeBase - 125 HZ | https://www.dropbox.com/scl/fi/3axxu21idvhpvtajeiwai/gazebase_savgol_ds8_normal.pkl?rlkey=r8mwa7qf1exht911gba7obyfg&st=41u9ffey&dl=0 |
-| GazeBase - 50 HZ | https://www.dropbox.com/scl/fi/iy8iqxwtlqrqqs3x0y4ih/gazebase_savgol_ds20_normal.pkl?rlkey=cbm72r8hdbwulm0z9meqcgdcn&st=sl4eyd2i&dl=0 | 
-| GazeBase - 31.25 HZ | https://www.dropbox.com/scl/fi/hvz770g58g50cl7dzwnue/gazebase_savgol_ds32_normal.pkl?rlkey=3a0ggn3sb6jcwwaowxgivmljb&st=hhcm754e&dl=0 |
-
-Then make sure to place them within `data/processed/` directory. The directory tree must look like shown below: 
+To process the dataset, make sure that unzipped version of the datasset is located in `dataset/raw`. It can be done using the following command: 
+```
+unzip path_to_gazebase.zip data/raw
+```
+After that run the following command
 
 ```
-data/
-├── processed
-│   ├── gazebase_savgol_ds1_normal.pkl
-│   ├── gazebase_savgol_ds2_normal.pkl
-│   ├── gazebase_savgol_ds4_normal.pkl
-│   ├── gazebase_savgol_ds8_normal.pkl
-│   ├── gazebase_savgol_ds20_normal.pkl
-│   └── gazebase_savgol_ds32_normal.pkl
+python src.data.gazebase.pretreatment --config=config/lohr-22.yaml
 ```
 
-Alternitavely, if you wish to download all pickle files at once, you can run the following command:
-```bash
-bash misc/download_dataset_pkl.sh
-```
+This will process the dataset and place the files in `data/processed`
 
 ## 🏋️ Training
 ### Instructions
@@ -148,10 +131,10 @@ bash train.sh
 ```
 However, if you want to train a model at a specific frequency, please run the following command:
 ```bash
-python src/train.py --ds=<ds_value> --fold=0
-python src/train.py --ds=<ds_value> --fold=1
-python src/train.py --ds=<ds_value> --fold=2
-python src/train.py --ds=<ds_value> --fold=3
+python src/train.py --ds=<ds_value> --fold=0 --config=config/lohr-22.yaml
+python src/train.py --ds=<ds_value> --fold=1 --config=config/lohr-22.yaml
+python src/train.py --ds=<ds_value> --fold=2 --config=config/lohr-22.yaml
+python src/train.py --ds=<ds_value> --fold=3 --config=config/lohr-22.yaml
 
 #Example when running the model on 125Hz:
 #python src/train.py --ds=8 --fold=0
@@ -159,35 +142,7 @@ python src/train.py --ds=<ds_value> --fold=3
 #python src/train.py --ds=8 --fold=2
 #python src/train.py --ds=8 --fold=3
 ```
-
-### Pre-trained weights
-If you wish to skip the training process, you can use pre-trained weights. The table below provides the links from where you can obtain the weights.
-
-| Name | Link |
-| -- | -- |
-| EyeKnowYouToo - 1000HZ | https://www.dropbox.com/scl/fo/sn0qcmind2ln5gkmrvvwe/AFjySWnObz3nkjt0lXsOCIw?rlkey=uus626eexxonx5p1735jq34x0&st=vz9ux8es&dl=0 |
-| EyeKnowYouToo - 500HZ | https://www.dropbox.com/scl/fo/xp2zkr5xvyakcoudrus6i/ANA4DJfYEFxPpIYnrJE0MTE?rlkey=3v75adr7n3txtmov71pci9lqr&st=13ui29tf&dl=0  |
-| EyeKnowYouToo - 250 HZ | https://www.dropbox.com/scl/fo/rwfrgflkjveslq9shzsri/ALIbUo__eDNyx1e3mkC5klI?rlkey=04i7furdytgby266oqxjkowmp&st=jq3vdebz&dl=0 | 
-| EyeKnowYouToo - 125 HZ | https://www.dropbox.com/scl/fo/to2ad1bpzscc639a59a9l/AKBTpm8tR9RKSVCB-EW06L8?rlkey=vqjtnu0ckv92g5wz6r6mdpod8&st=glu1uvne&dl=0 |
-| EyeKnowYouToo - 50 HZ | https://www.dropbox.com/scl/fo/k5wg2fqjtji1psipzfx2h/ABe4uapHBuKz309iRzPX2Q0?rlkey=z5fsiic0ou20lbwx39dkxbsl3&st=21ley2ct&dl=0 |
-| EyeKnowYouToo - 31.25 HZ | https://www.dropbox.com/scl/fo/zasfxht5df7i7i2e9huzj/ADHEpNrWKaWiN0El3VUpQGA?rlkey=50dduktd5qdwfzj7lbzddmqu2&st=5tdoooh9&dl=0 |
-
-*Note: Training was conducted on an NVIDIA A100 GPU with 80GB VRAM*
-
-Then place the weights in the following manner: 
-```bash
-output/
-├── ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal_f0_epoch=99.ckpt
-├── ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal_f1_epoch=99.ckpt
-├── ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal_f2_epoch=99.ckpt
-├── ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal_f3_epoch=99.ckpt
-├── ...
-├── ...
-├── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f0_epoch=99.ckpt
-├── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f1_epoch=99.ckpt
-├── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f2_epoch=99.ckpt
-└── ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal_f3_epoch=99.ckpt
-```
+Note: Default values of `ds` and `fold` are  configurable in `config/lohr-22.yaml`
 
 ## 🧪 Testing
 If you already have trained models across all frequencies (or have downloaded weights for each frequency), then you can run the following command to test all the models:
@@ -196,10 +151,10 @@ bash test.sh
 ```
 However, if you want to test a model at a specific frequency, please run the following command:
 ```bash
-python src/test.py --ds=<ds_value> --fold=0
-python src/test.py --ds=<ds_value> --fold=1
-python src/test.py --ds=<ds_value> --fold=2
-python src/test.py --ds=<ds_value> --fold=3
+python src/test.py --ds=<ds_value> --fold=0 --config=config/lohr-22.yaml
+python src/test.py --ds=<ds_value> --fold=1 --config=config/lohr-22.yaml
+python src/test.py --ds=<ds_value> --fold=2 --config=config/lohr-22.yaml
+python src/test.py --ds=<ds_value> --fold=3 --config=config/lohr-22.yaml
 
 #Example when running the model on 125Hz:
 #python src/test.py --ds=8 --fold=0
