@@ -1,7 +1,7 @@
 dataset_dir: "./data/gazebase"
 raw_dir: "./data/gazebase/raw"
 processed_dir: "./data/gazebase/processed"
-dataset_file: "data.gazebase.dataset"
+dataset_file: "src.data.gazebase.dataset"
 downsample_factors: 1
 initial_sampling_rate_hz: 1000
 n_folds: 4

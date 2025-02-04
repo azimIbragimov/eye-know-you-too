@@ -21,12 +21,13 @@ task: "TEX"
 bootstrap: False
 val: False
 plot: False
+protocol_file: "src.evaluate.protocols.judo100"
 
 #Dirs
 log_dir: "./logs"
-ckpt_dir: "./output/ekyt/gazebase"
-embed_dir: "./embeddings/ekyt/gazebase"
+ckpt_dir: "./output/ekyt/judo100"
+embed_dir: "./embeddings/ekyt/judo100"
 model_name: "ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal"
 plot_dir: "./figures"
 
-model_file: "models.eyeknowyoutoo"
+model_file: "src.models.eyeknowyoutoo"

@@ -7,8 +7,8 @@ import torch
 from pytorch_metric_learning import losses, miners
 from pytorch_metric_learning.utils import accuracy_calculator
 
-from .networks import Classifier, SimpleDenseNet
-from .base_model import BaseModel
+from src.models.networks import Classifier, SimpleDenseNet
+from src.models.base_model import BaseModel
 
 class Model(BaseModel):
     def __init__(

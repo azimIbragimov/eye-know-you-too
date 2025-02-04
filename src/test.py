@@ -12,7 +12,7 @@ import torch.optim as optim
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 
-from utility.utility import get_downsample_factors_dict
+from src.utility.utility import get_downsample_factors_dict
 
 
 config_parser = argparse.ArgumentParser(add_help=False)

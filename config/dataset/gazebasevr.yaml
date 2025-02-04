@@ -1,7 +1,7 @@
 dataset_dir: "./data/gazebasevr"
 raw_dir: "./data/gazebasevr/raw"
 processed_dir: "./data/gazebasevr/processed"
-dataset_file: "data.gazebasevr.dataset"
+dataset_file: "src.data.gazebasevr.dataset"
 downsample_factors: 1
 initial_sampling_rate_hz: 250
 n_folds: 4

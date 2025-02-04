@@ -11,8 +11,8 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 import torch
 import tqdm
 
-from utility.utility import load_config
-from utility.utility import get_downsample_factors_dict
+from src.utility.utility import load_config
+from src.utility.utility import get_downsample_factors_dict
 
 
 config_parser = argparse.ArgumentParser(add_help=False)

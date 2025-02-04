@@ -14,7 +14,7 @@ from ..assign_groups import assign_groups
 config_parser = argparse.ArgumentParser(add_help=False)
 config_parser.add_argument(
     "--config",
-    default="config/lohr-22-gazebasevr.yaml",
+    default="config/lohr-22-judo100.yaml",
     type=str,
     help="Config file for the current experiment",
 )
@@ -60,36 +60,31 @@ parser.add_argument(
 def extract_meta_data(filename: pathlib.Path):
     """Extract metadata from filename."""
     """Example of metadata. 
-    Filename: S_3458_S2_5_RAN.csv
+    Filename: 160_3.csv
+    Participant_ID: 150 (1-3th characters)
     Round: 1 (3rd character)
-    Participant_ID: 001 (4-7th characters)
-    Session: 1 (9th character)
-    Task: BLG (10-13th character)
     """
     metadata = filename.stem
     try:
-        round_num = metadata[2]
-        part_id = metadata[3:6]
-        session = metadata[8]
-        task = metadata[12:15]
+        part_id, round_num = metadata.split("_")
         return {
             "round": int(round_num),
             "part_id": int(part_id),
-            "session": int(session),
-            "task": task,
+            "session": -1,
+            "task": -1,
             "filename": str(filename),
         }
-    except IndexError:
-        print(f"Error parsing metadata from filename: {filename}")
+    except IndexError as E:
+        print(f"Error parsing metadata from filename: {filename}, {E}")
         return None
 
 
 def featurize(filename: pathlib.Path, processed_dir: pathlib.Path, downsample_factors, initial_sampling_rate_hz):
     """Generate features for a given CSV file."""
     try:
-        df = pd.read_csv(filename)
+        df = pd.read_csv(filename, sep="\t")
         # Downsample recording
-        gaze, ideal_sampling_rate = downsample_recording(df, downsample_factors, initial_sampling_rate_hz, ["x", "y"])
+        gaze, ideal_sampling_rate = downsample_recording(df, downsample_factors, initial_sampling_rate_hz, ["x_left", "x_right"])
         # Compute velocity using Savitzky-Golay filter
         vel = savgol_filter(gaze, 7, 2, deriv=1, axis=0, mode="nearest")
         vel *= ideal_sampling_rate  # Convert to deg/sec
@@ -121,8 +116,7 @@ if __name__ == "__main__":
     meta_data_file_path = processed_dir / "metadata.csv"
 
     # Get all raw CSV files
-    raw_files = list(pathlib.Path(args.raw_dir).rglob("*.csv"))
-
+    raw_files = [f for f in pathlib.Path(args.raw_dir).rglob("*.csv") if "TrialVars" not in f.name]
     # Prepare arguments for parallel processing
     process_args = [
         (file, processed_dir, downsample_factors, args.initial_sampling_rate_hz)
@@ -145,14 +139,14 @@ if __name__ == "__main__":
     # Create a DataFrame and save to CSV
     meta_data_df = pd.DataFrame(metadata_list)
     
-    # Participants of round 6 are test set
-    round_3_participants = np.setdiff1d(
-        meta_data_df[meta_data_df["round"] == 3]["part_id"].unique(),
-        meta_data_df[meta_data_df["round"] == 2]["part_id"].unique()
-    )    
-    test_set = meta_data_df[meta_data_df["part_id"].isin(round_3_participants)]
-    train_set = meta_data_df[~meta_data_df["part_id"].isin(round_3_participants)]
+    print(meta_data_df)
     
+    # Participants of round 4 are test set
+    round_4_participants = meta_data_df["part_id"].unique()[:30]  # Remove extra brackets
+    print(round_4_participants)
+
+    test_set = meta_data_df[meta_data_df["part_id"].isin(round_4_participants)]
+    train_set = meta_data_df[~meta_data_df["part_id"].isin(round_4_participants)]    
     # Count number of recordings for each participant in train set
     recordings_count = train_set.groupby("part_id").size().values
     fold_to_id, grp = assign_groups(args.n_folds, train_set["part_id"].unique(), recordings_count)
@@ -161,7 +155,9 @@ if __name__ == "__main__":
     for n in range(0, args.n_folds):
         meta_data_df.loc[meta_data_df["part_id"].isin(fold_to_id[n]), "set"] = n
             
-    meta_data_df.to_csv(meta_data_file_path, index=False)
+    print(meta_data_df.shape)
+    meta_data_df.to_csv(meta_data_file_path)
+    meta_data_df = pd.read_csv(meta_data_file_path)
     print(f"Metadata written to: {meta_data_file_path}")
     print(f"Train set size: {len(meta_data_df[meta_data_df['set'] != -1]['part_id'].unique())}")
     print(f"Test set size: {len(meta_data_df[meta_data_df['set'] == -1]['part_id'].unique())}")

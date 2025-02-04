@@ -9,7 +9,7 @@ batch_samples: 16
 ds: 1
 device: "cuda"
 degrade_precision: False
-seq_len: 1250
+seq_len: 5000
 map_at_r: False
 batch_size_for_testing: 256
 epochs: 100
@@ -21,13 +21,13 @@ task: "TEX"
 bootstrap: False
 val: False
 plot: False
-protocol_file: "src.evaluate.protocol.gazebasevr"
+protocol_file: "src.evaluate.protocol.gazebase"
 
 
 #Dirs
 log_dir: "./logs"
-ckpt_dir: "./output/ekyt/gazebasevr"
-embed_dir: "./embeddings/ekyt/gazebasevr"
+ckpt_dir: "./output/ekyt/gazebase"
+embed_dir: "./embeddings/ekyt/gazebase"
 model_name: "ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal"
 plot_dir: "./figures"
 

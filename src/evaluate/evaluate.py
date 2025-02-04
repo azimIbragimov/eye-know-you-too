@@ -5,11 +5,10 @@ from typing import Sequence, Tuple
 import yaml
 import importlib
 
-
 import numpy as np
 import pandas as pd
 
-from metrics import dprime, roc
+from src.metrics import dprime, roc
 
 
 
@@ -108,6 +107,8 @@ print(dataset_config)
 
 module = importlib.import_module(dataset_config["dataset_file"])
 Dataset = getattr(module, "Dataset")()
+
+
 TASK_TO_NUM = Dataset.TASK_TO_NUM
 NUM_TO_TASK = {v: k for k, v in TASK_TO_NUM.items()}
 
@@ -159,7 +160,6 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-
 model_name = args.model
 embed_dir = Path(args.embed_dir)
 plot_dir = Path(args.plot_dir)
@@ -188,14 +188,10 @@ test_ensemble_centroids = aggregate_embeddings(test_ensemble_embeddings, n_seq)
 
 # Build enrollment and authentication sets
 df = test_ensemble_centroids
-is_round_1 = df["nb_round"].isin([1])
-is_round_n = df["nb_round"].isin([1])
-is_session_1 = df["nb_session"] == 1
-is_session_2 = df["nb_session"] == 2
-is_task = df["nb_task"] == TASK_TO_NUM[task]
+module = importlib.import_module( model_config["protocol_file"])
+protocol = getattr(module, "protocol")
 
-enroll_idx = df.index[is_round_1 & is_session_1 & is_task]
-auth_idx = df.index[is_round_n & is_session_2 & is_task]
+enroll_idx, auth_idx = protocol(df, TASK_TO_NUM, args.task, args.round)
 
 # Compute similarity matrix
 y_score, y_true = pairwise_similarities(df, enroll_idx, auth_idx)
