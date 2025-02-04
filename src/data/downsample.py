@@ -16,6 +16,7 @@ def downsample_recording(
     df: pd.DataFrame,
     downsample_factors: Sequence[int],
     initial_sampling_rate_hz: int,
+    data_cols: Sequence[str],
 ) -> Tuple[np.ndarray, int]:
     """
     Decimate gaze positions while preserving NaNs.
@@ -48,7 +49,6 @@ def downsample_recording(
     ideal_sampling_rate : int
         The ideal sampling rate (Hz) after downsampling.
     """
-    data_cols = ["x", "y"]
     if len(downsample_factors) == 0:
         return df[data_cols].to_numpy(), initial_sampling_rate_hz
 

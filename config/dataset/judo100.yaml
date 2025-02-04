@@ -1,0 +1,9 @@
+dataset_dir: "./data/judo100"
+raw_dir: "./data/judo100/raw"
+processed_dir: "./data/judo100/processed"
+dataset_file: "src.data.judo100.dataset"
+downsample_factors: 1
+initial_sampling_rate_hz: 1000
+n_folds: 4
+num_workers: 1
+cache_size: 8000000000 #8GB

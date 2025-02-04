@@ -89,7 +89,7 @@ def featurize(filename: pathlib.Path, processed_dir: pathlib.Path, downsample_fa
     try:
         df = pd.read_csv(filename)
         # Downsample recording
-        gaze, ideal_sampling_rate = downsample_recording(df, downsample_factors, initial_sampling_rate_hz)
+        gaze, ideal_sampling_rate = downsample_recording(df, downsample_factors, initial_sampling_rate_hz, ["x", "y"])
         # Compute velocity using Savitzky-Golay filter
         vel = savgol_filter(gaze, 7, 2, deriv=1, axis=0, mode="nearest")
         vel *= ideal_sampling_rate  # Convert to deg/sec

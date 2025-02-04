@@ -19,7 +19,7 @@ class SubsequenceDataset(Dataset):
         processed_folder: str,
         mn: Optional[float] = None,
         sd: Optional[float] = None,
-        cache_size: int = int(1e9)  # Allow changing cache size dynamically
+        cache_size: int = int(1e9) 
     ):
         super().__init__()
         self.subsequence_length = subsequence_length
@@ -27,6 +27,7 @@ class SubsequenceDataset(Dataset):
         self.TASK_TO_NUM = TASK_TO_NUM
         self.exclude_task = exclude_task
         self.cache_size = cache_size
+        
 
         global load_cached_npy
         @functools.lru_cache(maxsize=int(self.cache_size / 1e6))
@@ -56,11 +57,9 @@ class SubsequenceDataset(Dataset):
             
             nb_subject = int(file["part_id"])
             nb_round = int(file["round"])
-            nb_session = int(file["session"])
-            nb_task = self.TASK_TO_NUM[file["task"]]
             
-            if self.exclude_task == nb_task:
-                continue
+            # if self.exclude_task == nb_task:
+            #     continue
 
             # Load data with LRU cache
             data = self.load_cached_npy(str(processed_path))
@@ -82,9 +81,9 @@ class SubsequenceDataset(Dataset):
             metadata["path"].extend([processed_path] * n_seq)
             metadata["nb_round"].extend([nb_round] * n_seq)
             metadata["nb_subject"].extend([nb_subject] * n_seq)
-            metadata["nb_session"].extend([nb_session] * n_seq)
-            metadata["nb_task"].extend([nb_task] * n_seq)
-            metadata["nb_subsequence"].extend(nb_subsequence)
+            metadata["nb_session"].extend([-1] * n_seq)
+            metadata["nb_task"].extend([-1] * n_seq)
+            metadata["nb_subsequence"].extend(nb_subsequence)            
 
         self.metadata = pd.DataFrame(metadata)
         subjects = torch.cat(subjects, dim=0)
