@@ -14,7 +14,7 @@ from ..assign_groups import assign_groups
 config_parser = argparse.ArgumentParser(add_help=False)
 config_parser.add_argument(
     "--config",
-    default="config/lohr-22.yaml",
+    default="config/lohr-22-gazebasevr.yaml",
     type=str,
     help="Config file for the current experiment",
 )
@@ -60,7 +60,7 @@ parser.add_argument(
 def extract_meta_data(filename: pathlib.Path):
     """Extract metadata from filename."""
     """Example of metadata. 
-    Filename: S_1001_S1_BLG.npy
+    Filename: S_3458_S2_5_RAN.csv
     Round: 1 (3rd character)
     Participant_ID: 001 (4-7th characters)
     Session: 1 (9th character)
@@ -71,7 +71,7 @@ def extract_meta_data(filename: pathlib.Path):
         round_num = metadata[2]
         part_id = metadata[3:6]
         session = metadata[8]
-        task = metadata[10:13]
+        task = metadata[12:15]
         return {
             "round": int(round_num),
             "part_id": int(part_id),
@@ -146,9 +146,12 @@ if __name__ == "__main__":
     meta_data_df = pd.DataFrame(metadata_list)
     
     # Participants of round 6 are test set
-    round_6_participants = meta_data_df[meta_data_df["round"] == 6]["part_id"].unique()
-    test_set = meta_data_df[meta_data_df["part_id"].isin(round_6_participants)]
-    train_set = meta_data_df[~meta_data_df["part_id"].isin(round_6_participants)]
+    round_3_participants = np.setdiff1d(
+        meta_data_df[meta_data_df["round"] == 3]["part_id"].unique(),
+        meta_data_df[meta_data_df["round"] == 2]["part_id"].unique()
+    )    
+    test_set = meta_data_df[meta_data_df["part_id"].isin(round_3_participants)]
+    train_set = meta_data_df[~meta_data_df["part_id"].isin(round_3_participants)]
     
     # Count number of recordings for each participant in train set
     recordings_count = train_set.groupby("part_id").size().values
@@ -160,3 +163,5 @@ if __name__ == "__main__":
             
     meta_data_df.to_csv(meta_data_file_path, index=False)
     print(f"Metadata written to: {meta_data_file_path}")
+    print(f"Train set size: {len(meta_data_df[meta_data_df['set'] != -1]['part_id'].unique())}")
+    print(f"Test set size: {len(meta_data_df[meta_data_df['set'] == -1]['part_id'].unique())}")

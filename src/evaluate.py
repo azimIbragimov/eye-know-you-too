@@ -45,7 +45,11 @@ def aggregate_embeddings(df: pd.DataFrame, n: int) -> pd.DataFrame:
 
     exclude = (df.loc[:, "nb_subsequence"] >= n)
     exclude_idx = df.index[exclude]
+    print(df.shape)
+    print(df["nb_subsequence"])
     df = df.drop(index=exclude_idx).drop(columns=drop_cols)
+    print(df.shape)
+    print(df)
 
     embed_cols = [x for x in df.columns if x.startswith("embed_dim")]
     centroid_embeddings = (
@@ -152,29 +156,6 @@ parser.add_argument(
     choices=list(TASK_TO_NUM.keys()),
     help="The task to use for enrollment and authentication",
 )
-parser.add_argument(
-    "--bootstrap",
-    default=model_config["bootstrap"],
-    action="store_true",
-    help="Flag indicating to compute results involving bootstrapping",
-)
-parser.add_argument(
-    "--judo",
-    action="store_true",
-    help="Flag indicating to compute results involving JuDo1000",
-)
-parser.add_argument(
-    "--val",
-    default=model_config["val"],
-    action="store_true",
-    help="Flag indicating to compute results involving the validation set",
-)
-parser.add_argument(
-    "--plot",
-    default=model_config["plot"],
-    action="store_true",
-    help="Flag indicating to plot figures",
-)
 
 args = parser.parse_args()
 
@@ -185,31 +166,30 @@ plot_dir = Path(args.plot_dir)
 n_seq = args.n_seq
 nb_round = args.round
 task = args.task
-skip_bootstrap = not args.bootstrap
-skip_judo = not args.judo
-skip_val = not args.val
-skip_plot = not args.plot
 
 print("Using model:", model_name)
 
 fold_names = [model_name + f"_f{fold}.csv" for fold in range(4)]
+
+
 files_dict = {
-    k: [embed_dir / "_".join([k, name]) for name in fold_names]
-    for k in ("test", "val", "judo")
+    "test": [embed_dir / "_".join(["test", name]) for name in fold_names]
 }
 
+print(files_dict)
 print(f"\nR{nb_round} {task} ensemble, first {n_seq} subsequences")
 print("-" * 20)
 
 # Concatenate embeddings across folds
 test_embeddings = [pd.read_csv(f) for f in files_dict["test"]]
+
 test_ensemble_embeddings = concatenate_embeddings(test_embeddings)
 test_ensemble_centroids = aggregate_embeddings(test_ensemble_embeddings, n_seq)
 
 # Build enrollment and authentication sets
 df = test_ensemble_centroids
-is_round_1 = df["nb_round"] == 1
-is_round_n = df["nb_round"] == nb_round
+is_round_1 = df["nb_round"].isin([1])
+is_round_n = df["nb_round"].isin([1])
 is_session_1 = df["nb_session"] == 1
 is_session_2 = df["nb_session"] == 2
 is_task = df["nb_task"] == TASK_TO_NUM[task]
@@ -235,14 +215,6 @@ score_sorted = np.take_along_axis(y_score_enrolled, sorted_indices, axis=0)
 true_sorted = np.take_along_axis(y_true_enrolled, sorted_indices, axis=0)
 rank1 = true_sorted[0, :].astype(int).mean()
 print(f"Rank-1 IR (%): {100 * rank1:.4f}")
-print(y_score_np, y_true_np)
-print(sorted_indices)
-print(score_sorted)
-print(true_sorted)
-print(len(df["nb_subject"].unique()))
-
-metadata_1 = pd.read_csv("/blue/vemuri/sivolgina/azim/github/eye-know-you-too/data/processed/metadata.csv")
-print(len(metadata_1[metadata_1['set'] == 0]['part_id'].unique()))
 
 # Equal error rate (EER)
 y_score_flat = y_score_np.flatten()
