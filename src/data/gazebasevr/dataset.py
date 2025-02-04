@@ -38,7 +38,7 @@ class Dataset(BaseDataset):
     ):
         super().__init__()
 
-        self.initial_sampling_rate_hz = 1000
+        self.initial_sampling_rate_hz = 250
         self.downsample_factors = downsample_factors
         self.total_downsample_factor = np.prod(self.downsample_factors)
         self.noise_sd = noise_sd
@@ -46,14 +46,13 @@ class Dataset(BaseDataset):
         self.cache_size = cache_size
         
         self.TASK_TO_NUM = {
-            "HSS": 0,
-            "RAN": 1,
-            "TEX": 2,
-            "FXS": 3,
-            "VD1": 4,
-            "VD2": 5,
-            "BLG": 6,
+            "VRG": 0,
+            "PUR": 1,
+            "VID": 2,
+            "TEX": 3,
+            "RAN": 4,
         }
+        self.train_exclude_task = "VRG"
 
         self.subsequence_length = int(
             subsequence_length_before_downsampling
@@ -62,7 +61,8 @@ class Dataset(BaseDataset):
 
         self.base_dir = Path(base_dir)
         self.processed_file_dir = self.base_dir / "processed"
-                
+        
+
         self.current_fold = current_fold
 
         self.classes_per_batch = classes_per_batch
@@ -83,12 +83,12 @@ class Dataset(BaseDataset):
         train_metadata = metadata[(metadata["set"] != -1) & (metadata["set"] != self.current_fold)]        
         val_metadata = metadata[metadata["set"] == self.current_fold]
         test_metadata = metadata[metadata["set"] == -1]
-        
+                
         train_set = SubsequenceDataset(
             train_metadata, 
             self.subsequence_length, 
             self.TASK_TO_NUM, 
-            "BLG",
+            self.train_exclude_task,
             self.processed_file_dir,
             mn=None, 
             sd=None,
@@ -116,7 +116,7 @@ class Dataset(BaseDataset):
             val_metadata,
             self.subsequence_length,
             self.TASK_TO_NUM,
-            "BLG",
+            self.train_exclude_task,
             self.processed_file_dir,
             mn=self.zscore_mn,
             sd=self.zscore_sd,
