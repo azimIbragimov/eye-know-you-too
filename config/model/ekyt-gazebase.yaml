@@ -21,7 +21,7 @@ task: "TEX"
 bootstrap: False
 val: False
 plot: False
-protocol_file: "src.evaluate.protocol.gazebase"
+protocol_file: "src.evaluate.protocols.gazebase"
 
 
 #Dirs
