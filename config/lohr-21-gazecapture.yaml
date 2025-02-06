@@ -1,0 +1,3 @@
+dataset_config: "config/dataset/gazecapture.yaml"  
+model_config: "config/model/ekyt-gazecapture.yaml"         
+metadata: "Model presented in Lohr'22 study, Eye Know You Too: Toward Viable End-to-End Eye Movement Biometrics for User Authentication operated on GazeBase Dataset"
