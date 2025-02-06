@@ -3,7 +3,7 @@ def protocol(df, TASK_TO_NUM, task, round_n):
     length_of_recording = df.shape[0]    
     # Correct Boolean masks
     is_round_1 = df["nb_subsequence"] == 0
-    is_round_n = df["nb_subsequence"] == 1
+    is_round_n = df["nb_subsequence"] == 2
     
     # Extract indices using .loc[]
     enroll_idx = df.loc[is_round_1].index
