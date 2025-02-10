@@ -1,0 +1,3 @@
+dataset_config: "config/dataset/gazebasevr.yaml"  
+model_config: "config/model/del-gazebasevr.yaml"         
+metadata: "Model presented in Machowsky '20 study: Biometric Identification and Presentation-Attack Detection using Micro- and Macro-Movements of the Eyes"

@@ -19,6 +19,7 @@ class Model(BaseModel):
         w_metric_loss: float = 1.0,
         w_class_loss: float = 0.1,
         compute_map_at_r: bool = False,
+        seq_len=5000,
     ):
         super().__init__()
 

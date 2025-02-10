@@ -27,12 +27,16 @@ class Model(nn.Module):
         w_metric_loss: float = 1.0,
         w_class_loss: float = 0.0,
         compute_map_at_r: bool = False,
+        seq_len=5000,
     ):
         super().__init__()
+        
+        print("HERE", seq_len)
 
         input_shape: Iterable[int] = [2, 1024]
         self.normalize_embeddings: bool = False
         self.classifier = Classifier(128, n_classes)
+        self.seq_len = seq_len
         
         self.pad_method = self.pad_append
 
@@ -83,7 +87,7 @@ class Model(nn.Module):
             value=0.0,
         )
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:                            
         x = self.embedder(x)
         return x
 
@@ -112,15 +116,25 @@ class Model(nn.Module):
             t_in = t_out
             
         layers.append(nn.Flatten())
-        layers.append(
-            self.build_fcn(1018368, {
-            "n_layers": 2,
-            "sizes": [256, 128]
-                                }
-                           )
-            )
         
-
+        print("HERE",  self.seq_len)
+        if self.seq_len == 5000:
+            layers.append(
+                self.build_fcn(1018368, {
+                "n_layers": 2,
+                "sizes": [256, 128]
+                                    }
+                            )
+                )
+            
+        if self.seq_len == 1250:
+            layers.append(
+                self.build_fcn(58368, {
+                "n_layers": 2,
+                "sizes": [256, 128]
+                                    }
+                            )
+                )        
         return nn.Sequential(*layers)
     
     def build_fcn(self, t_in: int, params: dict) -> Tuple[nn.Module, int]:

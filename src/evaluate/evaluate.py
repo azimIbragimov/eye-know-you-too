@@ -117,7 +117,7 @@ parser = argparse.ArgumentParser(parents=[config_parser])
 
 parser.add_argument(
     "--model",
-    default="ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal",
+    default="del_t5000_ds1_bc16_bs16_wms10_wce01_normal",
     type=str,
     help=(
         "The common part of the embedding filenames"

@@ -26,8 +26,8 @@ protocol_file: "src.evaluate.protocols.gazecapture"
 
 #Dirs
 log_dir: "./logs"
-ckpt_dir: "./output/eky/gazebase"
-embed_dir: "./embeddings/eky/gazebase"
+ckpt_dir: "./output/eky/gazecapture"
+embed_dir: "./embeddings/eky/gazecapture"
 model_name: "eky_t5000_ds1_bc16_bs16_wms10_wce01_normal"
 plot_dir: "./figures"
 

@@ -189,8 +189,10 @@ if __name__ == "__main__":
         w_metric_loss=args.w_ms,
         w_class_loss=args.w_ce,
         compute_map_at_r=args.map_at_r,
+        seq_len=args.seq_len
     ).to(device_id)
     model = DDP(model, device_ids=[device_id])
+    print(model)
     
     
     opt = torch.optim.Adam(model.parameters())

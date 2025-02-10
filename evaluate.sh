@@ -1,51 +1,63 @@
-# Evaluate test results
-python src/evaluate.py --model=ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal --task=HSS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal --task=RAN >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal --task=TEX >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal --task=FXS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal --task=VD1 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal --task=VD2 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds1_bc16_bs16_wms10_wce01_normal --task=BLG >> logs/report.txt
+# Eye Know You Too
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/lohr-22-gazebase.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/lohr-22-gazebase.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/lohr-22-gazebase.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/lohr-22-gazebase.yaml
 
-python src/evaluate.py --model=ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal --task=HSS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal --task=RAN >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal --task=TEX >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal --task=FXS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal --task=VD1 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal --task=VD2 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds2_bc16_bs16_wms10_wce01_normal --task=BLG >> logs/report.txt
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/lohr-22-gazebasevr.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/lohr-22-gazebasevr.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/lohr-22-gazebasevr.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/lohr-22-gazebasevr.yaml
 
-python src/evaluate.py --model=ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal --task=HSS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal --task=RAN >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal --task=TEX >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal --task=FXS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal --task=VD1 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal --task=VD2 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds4_bc16_bs16_wms10_wce01_normal --task=BLG >> logs/report.txt
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/lohr-22-judo100.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/lohr-22-judo100.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/lohr-22-judo100.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/lohr-22-judo100.yaml
+
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/lohr-22-gazecapture.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/lohr-22-gazecapture.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/lohr-22-gazecapture.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/lohr-22-gazecapture.yaml
 
 
-python src/evaluate.py --model=ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal --task=HSS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal --task=RAN >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal --task=TEX >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal --task=FXS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal --task=VD1 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal --task=VD2 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds8_bc16_bs16_wms10_wce01_normal --task=BLG >> logs/report.txt
+# Eye Know You
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/lohr-21-gazebase.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/lohr-21-gazebase.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/lohr-21-gazebase.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/lohr-21-gazebase.yaml
 
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/lohr-21-gazebasevr.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/lohr-21-gazebasevr.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/lohr-21-gazebasevr.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/lohr-21-gazebasevr.yaml
 
-python src/evaluate.py --model=ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal --task=HSS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal --task=RAN >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal --task=TEX >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal --task=FXS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal --task=VD1 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal --task=VD2 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds20_bc16_bs16_wms10_wce01_normal --task=BLG >> logs/report.txt
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/lohr-21-judo100.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/lohr-21-judo100.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/lohr-21-judo100.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/lohr-21-judo100.yaml
 
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/lohr-21-gazecapture.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/lohr-21-gazecapture.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/lohr-21-gazecapture.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/lohr-21-gazecapture.yaml
 
-python src/evaluate.py --model=ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal --task=HSS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal --task=RAN >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal --task=TEX >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal --task=FXS >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal --task=VD1 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal --task=VD2 >> logs/report.txt
-python src/evaluate.py --model=ekyt_t5000_ds32_bc16_bs16_wms10_wce01_normal --task=BLG >> logs/report.txt
+# DEL
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/machowsky-20-gazebase.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/machowsky-20-gazebase.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/machowsky-20-gazebase.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/machowsky-20-gazebase.yaml
+
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/machowsky-20-gazebasevr.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/machowsky-20-gazebasevr.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/machowsky-20-gazebasevr.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/machowsky-20-gazebasevr.yaml
+
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/machowsky-20-judo100.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/machowsky-20-judo100.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/machowsky-20-judo100.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/machowsky-20-judo100.yaml
+
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=0 --config=config/machowsky-20-gazecapture.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=1 --config=config/machowsky-20-gazecapture.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=2 --config=config/machowsky-20-gazecapture.yaml
+torchrun --nnodes=1 --nproc_per_node=1 -m src.evaluate.evaluate --fold=3 --config=config/machowsky-20-gazecapture.yaml

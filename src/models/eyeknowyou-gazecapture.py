@@ -18,6 +18,14 @@ from pytorch_metric_learning.utils import accuracy_calculator
 
 
 
+class DuplicateLayer(nn.Module):
+    def __init__(self, dim: int = -1):
+        super().__init__()
+        self.dim = dim  # Dimension along which to repeat
+
+    def forward(self, x):
+        return x.repeat_interleave(2, dim=self.dim)  # Duplicate each element
+
 class Model(nn.Module):
     def __init__(
         self,
@@ -27,8 +35,11 @@ class Model(nn.Module):
         w_metric_loss: float = 1.0,
         w_class_loss: float = 0.0,
         compute_map_at_r: bool = False,
+        seq_len=5000,
     ):
         super().__init__()
+        
+        print("HERE", seq_len)
 
         input_shape: Iterable[int] = [9, 1024]
         self.normalize_embeddings: bool = False
@@ -42,7 +53,7 @@ class Model(nn.Module):
         
         self.embedder = self.build_cnn(c_in, t_in, 
             {
-            "n_layers": 9, 
+            "n_layers": 7, 
             "filters": [64, 64, 64, 64, 128, 128, 128, 128, 256],
             "kernel_sizes": [3, 3, 3, 3, 3, 3, 3, 3, 3],
             "dilations": [1, 2, 4, 8, 16, 32, 64, 128, 256],
@@ -84,7 +95,10 @@ class Model(nn.Module):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        
+        x = torch.repeat(x, 2)
         x = self.embedder(x)
+        
         return x
 
     def build_cnn(
@@ -96,7 +110,7 @@ class Model(nn.Module):
         dilations: Iterable[int] = params["dilations"]
         use_batch_norm: bool = params["use_batch_norm"]
 
-        layers = []
+        layers = [DuplicateLayer(dim=-1)]
         for i in range(n_layers):
             c_out = filters[i]
             k = kernel_sizes[i]
@@ -113,7 +127,7 @@ class Model(nn.Module):
             
         layers.append(nn.Flatten())
         layers.append(
-            self.build_fcn(1018368, {
+            self.build_fcn(44288, {
             "n_layers": 2,
             "sizes": [256, 128]
                                 }

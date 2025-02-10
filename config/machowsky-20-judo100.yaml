@@ -1,0 +1,3 @@
+dataset_config: "config/dataset/judo100.yaml"  
+model_config: "config/model/del-judo100.yaml"         
+metadata: "Model presented in Lohr'22 study, Eye Know You Too: Toward Viable End-to-End Eye Movement Biometrics for User Authentication operated on GazeBase Dataset"
